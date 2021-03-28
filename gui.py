@@ -56,13 +56,13 @@ class Ui_MainWindow(object):
 
     def takeinputs(self):
         number = QtWidgets.QInputDialog.getText(
-             MainWindow, 'SIM NUMBER', 'Enter Sim Number:')
+             self.centralwidget , 'SIM NUMBER', 'Enter Sim Number:')
         self.number = str(number[0])
         return self.number
     
     def duplicateNumber(self):
         number = QtWidgets.QInputDialog.getText(
-             MainWindow, 'Duplicate SIM Error!', 'SIM already used! Enter New Sim Number:')
+             self.centralwidget , 'Duplicate SIM Error!', 'SIM already used! Enter New Sim Number:')
         self.number = str(number[0])
         return self.number
     

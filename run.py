@@ -8,5 +8,6 @@ if __name__ == "__main__":
     ui = gui.Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
+    # hello
     sys.exit(app.exec_())
     
