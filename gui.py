@@ -32,6 +32,7 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         
+        self.error_dialog = QtWidgets.QErrorMessage()
         
         self.grapics = grapics(self.centralwidget,self.cwd,self.commDev)
         self.buttons = buttons(self.centralwidget,self.cwd)
@@ -55,15 +56,29 @@ class Ui_MainWindow(object):
         self.buttons.button8.clicked.connect(self.button8_click)
 
     def takeinputs(self):
-        number = QtWidgets.QInputDialog.getText(
+        Number, ok = QtWidgets.QInputDialog.getText(
              self.centralwidget , 'SIM NUMBER', 'Enter Sim Number:')
-        self.number = str(number[0])
+        if ok:
+            try:
+                print(Number)
+                self.number = str(Number)
+            except IndexError:
+                pass
+        else:
+            return False
         return self.number
     
     def duplicateNumber(self):
-        number = QtWidgets.QInputDialog.getText(
+        Number, ok = QtWidgets.QInputDialog.getText(
              self.centralwidget , 'Duplicate SIM Error!', 'SIM already used! Enter New Sim Number:')
-        self.number = str(number[0])
+        if ok:
+            try:
+                self.number = str(Number[0])
+                print(self.number)
+            except IndexError:
+                pass
+        else:
+            return False
         return self.number
     
     def action_Switch(self):
@@ -179,25 +194,34 @@ class Ui_MainWindow(object):
         print("push button clikced")
         self.offline()
         while True:
-            if len(self.takeinputs()) == 11:
-                self.offline()
-                self.commDev.auto_establish_comm()
-                if self.commDev.connectedPort is not None:
-                    if self.commDev.sc_state == 1:
-                        nextID = self.db.getTotalID() + 1
-                        id_pass = self.genID.newID(nextID)
-                        Id,pswd = id_pass[0],id_pass[1]
-                        print("sending id",Id)
-                        self.commDev.communicate(Id)
-                        time.sleep(1)
-                        if self.db.addNew(Id[4:], self.number, pswd, datetime.now()) is False:
-                            print("Duplicate mobile number")
-                            self.duplicateNumber()
-                            continue
-                if self.commDev.communication == 1:
-                    self.online()
-                    self.grapics.ring.setEnabled(True)
+            if self.takeinputs():
+                print(len(self.number))
+                if len(self.number) == 11:
+                    print("correct number")
+                    self.offline()
+                    self.commDev.auto_establish_comm()
+                    if self.commDev.connectedPort is not None:
+                        if self.commDev.sc_state == 1:
+                            nextID = self.db.getTotalID() + 1
+                            id_pass = self.genID.newID(nextID)
+                            Id,pswd = id_pass[0],id_pass[1]
+                            print("sending id",Id)
+                            self.commDev.communicate(Id)
+                            time.sleep(1)
+                            if self.db.addNew(Id[4:], self.number, pswd, datetime.now()) is False:
+                                print("Duplicate mobile number")
+                                self.duplicateNumber()
+                                continue
+                    if self.commDev.communication == 1:
+                        self.online()
+                        self.grapics.ring.setEnabled(True)
+                    break
+                else:
+                    print("invalid number")
+            else:
                 break
+
+                
         
     def button2_click(self):  
         self.grapics.click_to.adjustSize()
