@@ -8,14 +8,14 @@ class grapics:
         self.serial = 0
         self.centralwidget = cw
         self.cwd = cwd
-        self.background()
-        self.indicator()
-        self.status()
+        self.backGround()
+        self.indiCator()
+        self.staTus()
         self.green_ring()
-        self.click_to()
+        self.clickTo()
         
     
-    def background(self):
+    def backGround(self):
         self.background = QtWidgets.QLabel(self.centralwidget)
         self.background.setGeometry(QtCore.QRect(0, 0, cg.width, cg.height))
         font = QtGui.QFont()
@@ -28,7 +28,7 @@ class grapics:
         self.background.setScaledContents(True)
         self.background.setObjectName("background")
                       
-    def indicator(self):
+    def indiCator(self):
         
         self.indicator = QtWidgets.QLabel(self.centralwidget)
         self.indicator.setGeometry(QtCore.QRect(cg.indicator_x,cg.indicator_y, cg.indicator_width, cg.indicator_height))
@@ -38,7 +38,7 @@ class grapics:
         self.indicator.setObjectName("indicator")
         self.indicator.show()
         
-    def status(self):
+    def staTus(self):
         
         self.status = QtWidgets.QLabel(self.centralwidget)
         self.status.setGeometry(QtCore.QRect(cg.width//4.5, cg.height//1.6, 11, 41))
@@ -64,7 +64,7 @@ class grapics:
         self.ring.setObjectName("rign")
         self.ring.setEnabled(False)
 
-    def click_to(self):
+    def clickTo(self):
         self.click_to = QtWidgets.QLabel(self.centralwidget)
         self.click_to.setGeometry(QtCore.QRect(cg.width//2.9, cg.height-cg.height//3.5, 200, 30))
         font = QtGui.QFont()
@@ -113,7 +113,7 @@ class grapics:
         self.showPorts.hide()
         self.showPorts.setObjectName("showPorts")
         
-    def portIndicator(self):
+    def portIndiCator(self):
         
         self.portIndicator = QtWidgets.QLabel(self.centralwidget)
         self.portIndicator.setGeometry(QtCore.QRect(cg.width-50, 20, 25,25))

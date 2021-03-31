@@ -32,6 +32,10 @@ button6_width, button6_height = 90, 90
 
 button8_width, button8_height = 58, 58
 
+
+button9_x,button9_y = 1300, 20
+button9_height, button9_width = 50, 50
+
 indicator_x, indicator_y = 60, 60
 indicator_width = 100
 indicator_height = 100
@@ -55,3 +59,5 @@ display = "Grapics/display.png"
 newUsb = "Grapics/newUsb.png"
 noUsb = "Grapics/no_usb.png"
 connectedUSB = "Grapics/connectedUSB.png"
+reconnectServer = "Grapics/server-down.png"
+serverOnline = "Grapics/server-online.png"

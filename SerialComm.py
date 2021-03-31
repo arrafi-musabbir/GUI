@@ -34,7 +34,7 @@ class commDev:
                     # self.sc.timeout = 3
                 except UnicodeDecodeError:
                     pass
-            self.sc.close()
+            # self.sc.close()
                 
         except serial.serialutil.SerialException:
             print("Could not open port")
@@ -46,7 +46,7 @@ class commDev:
             print("Communication port found: ", self.connectedPort)
             try:
                 self.sc = serial.Serial(self.connectedPort, 9600)
-                self.sc.flush()
+                self.flush_device()
                 print("Establishing communication at port: ", self.connectedPort)
                 self.sc.timeout = 3
                 self.sc_state = 1
@@ -78,6 +78,13 @@ class commDev:
             print("No comm port found")
             return None
 
+    def flush_device(self):
+        print("device flushed")
+        self.sc.flush()
+        
+    def close_device(self):
+        print("device closed")
+        self.sc.close()
 
 if __name__ == "__main__":
     a = commDev()

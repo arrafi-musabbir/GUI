@@ -15,11 +15,11 @@ class Ui_MainWindow(object):
     
     def setupUi(self, MainWindow):
         self.db = database()
+        self.db_state = self.db.db_state
         self.total_ids = self.db.totalIDs
         self.genID = genID()
         self.commDev = commDev()
         self.sc_state = self.commDev.sc_state
-        self.db_state = self.db.db_state
         self.cwd = os.getcwd()
         self.number = "0"
         self.state = "Main"
@@ -36,7 +36,8 @@ class Ui_MainWindow(object):
         
         self.grapics = grapics(self.centralwidget,self.cwd,self.commDev)
         self.buttons = buttons(self.centralwidget,self.cwd)
-        
+        self.connectServer()
+        self.dbErrorWarning()
         self.actionExit = QtWidgets.QShortcut(QtGui.QKeySequence('Esc'),MainWindow)
         self.actionExit.activated.connect(self.action_Exit)
         
@@ -47,13 +48,14 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
-        self.buttons.button1.clicked.connect(self.button1_click)
+        self.buttons.button1.clicked.connect(self.init_device)
         self.buttons.button2.clicked.connect(self.button2_click)
         self.buttons.button3.clicked.connect(self.button3_click)
         self.buttons.button4.clicked.connect(self.button4_click)
         self.buttons.button5.clicked.connect(self.button5_click)
         self.buttons.button6.clicked.connect(self.button6_click)
         self.buttons.button8.clicked.connect(self.button8_click)
+        self.buttons.button9.clicked.connect(self.connectServer)
 
     def takeinputs(self):
         Number, ok = QtWidgets.QInputDialog.getText(
@@ -73,7 +75,7 @@ class Ui_MainWindow(object):
              self.centralwidget , 'Duplicate SIM Error!', 'SIM already used! Enter New Sim Number:')
         if ok:
             try:
-                self.number = str(Number[0])
+                self.number = str(Number)
                 print(self.number)
             except IndexError:
                 pass
@@ -81,6 +83,28 @@ class Ui_MainWindow(object):
             return False
         return self.number
     
+    def invalidNumber(self):
+        Number, ok = QtWidgets.QInputDialog.getText(
+             self.centralwidget , 'Invalid SIM Error!', 'Invalid sim number! Enter New Sim Number:')
+        if ok:
+            try:
+                self.number = str(Number)
+                print(self.number)
+            except IndexError:
+                pass
+        else:
+            return False
+        return self.number
+    
+    def dbErrorWarning(self):
+        self.msg = QtWidgets.QMessageBox()
+        self.msg.setIcon(QtWidgets.QMessageBox.Warning)
+        self.msg.setText("Could't establish connection \n with database")
+        # self.msg.setInformativeText("Could't connect to database")
+        self.msg.setWindowTitle("Connection failed")
+        self.msg.setDetailedText("Remote server connection failed: contact your admin")
+        
+        
     def action_Switch(self):
         if self.state == "Main":
             self.button1_click()
@@ -190,19 +214,23 @@ class Ui_MainWindow(object):
         self.grapics.click_to.show()
         self.grapics.click_to.adjustSize()
 
-    def button1_click(self):
+    def init_device(self):
         print("push button clikced")
         self.offline()
         while True:
             if self.takeinputs():
-                print(len(self.number))
                 if len(self.number) == 11:
-                    print("correct number")
+                    print("correct number length")
                     self.offline()
                     self.commDev.auto_establish_comm()
                     if self.commDev.connectedPort is not None:
                         if self.commDev.sc_state == 1:
-                            nextID = self.db.getTotalID() + 1
+                            try:
+                                nextID = self.db.getTotalID() + 1
+                            except:
+                                self.msg.show()
+                                print("database didn't respond")
+                                break
                             id_pass = self.genID.newID(nextID)
                             Id,pswd = id_pass[0],id_pass[1]
                             print("sending id",Id)
@@ -210,18 +238,22 @@ class Ui_MainWindow(object):
                             time.sleep(1)
                             if self.db.addNew(Id[4:], self.number, pswd, datetime.now()) is False:
                                 print("Duplicate mobile number")
+                                self.commDev.communication = 0
+                                self.commDev.flush_device()
                                 self.duplicateNumber()
                                 continue
+                        self.commDev.close_device()
                     if self.commDev.communication == 1:
                         self.online()
                         self.grapics.ring.setEnabled(True)
                     break
                 else:
+                    self.invalidNumber()
                     print("invalid number")
+                    continue
+                    
             else:
-                break
-
-                
+                break          
         
     def button2_click(self):  
         self.grapics.click_to.adjustSize()
@@ -292,9 +324,25 @@ class Ui_MainWindow(object):
         self.grapics.click_to.setText("CLICK SPACE TO CONNECT")
         self.grapics.indicator.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.red_indicator))
         
-    
+    def connectServer(self):
+        print("trying to reconnect server")
+        if self.db_state == 0:
+            if self.db.connectDB():
+                self.db_state = 1
+                icon = QtGui.QIcon()
+                icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.serverOnline), QtGui.QIcon.Active, QtGui.QIcon.On)
+                self.buttons.button9.setIcon(icon)
+            else:
+                icon = QtGui.QIcon()
+                icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
+                self.buttons.button9.setIcon(icon)
+        else:
+            print("server Connection extablished successfully") 
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.serverOnline), QtGui.QIcon.Active, QtGui.QIcon.On)
+            self.buttons.button9.setIcon(icon)     
         
-
+        
 if __name__ == "__main__":
     
     app = QtWidgets.QApplication(sys.argv)
