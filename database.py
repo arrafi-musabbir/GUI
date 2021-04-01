@@ -84,9 +84,9 @@ class database:
             socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
             print("stable internet connection")
             return True
-        except socket.error as ex:
+        except socket.error:
             # print(ex)
-            print("unstable internet connection")
+            print("unstable internet connection restored")
             return False
     
 if __name__ == "__main__":

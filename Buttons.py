@@ -16,9 +16,7 @@ class buttons:
         self.button7()
         self.button8()
         self.reconnectServer()
-
-    
-            
+ 
     def button1(self): #on - off
         self.button1 = QtWidgets.QPushButton(self.centralwidget)
         self.button1.setGeometry(QtCore.QRect(cg.button1_x, cg.button1_y, cg.button1_width, cg.button1_height))
