@@ -13,6 +13,7 @@ class grapics:
         self.staTus()
         self.green_ring()
         self.clickTo()
+        self.dbErrorWarning()
         
     
     def backGround(self):
@@ -124,7 +125,7 @@ class grapics:
 
     def showCredits(self):
         self.credits = QtWidgets.QLabel(self.centralwidget)
-        self.credits.setGeometry(QtCore.QRect(cg.width//4.3, cg.height/2, 11, 41))
+        self.credits.setGeometry(QtCore.QRect(cg.width//5, cg.height/2, 11, 41))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei UI")
         font.setPointSize(28)
@@ -140,3 +141,20 @@ class grapics:
         self.credits.setObjectName("credits")
         self.credits.setAlignment(QtCore.Qt.AlignCenter)
         self.credits.adjustSize()
+        
+    def dbErrorWarning(self):
+        self.dbmsg = QtWidgets.QMessageBox()
+        self.dbmsg.setIcon(QtWidgets.QMessageBox.Warning)
+        self.dbmsg.setText("Could't establish connection \n with database")
+        # self.msg.setInformativeText("Could't connect to database")
+        self.dbmsg.setWindowTitle("Server connection failed")
+        self.dbmsg.setDetailedText("Remote server connection failed: contact your admin")
+        
+    def invlidSimWarning(self):
+        self.invSimmsg = QtWidgets.QMessageBox()
+        self.invSimmsg.setIcon(QtWidgets.QMessageBox.Warning)
+        self.invSimmsg.setText("Could't establish connection \n with database")
+        # self.invSimmsg.setInformativeText("Could't connect to database")
+        self.invSimmsg.setWindowTitle("Server connection failed")
+        self.invSimmsg.setDetailedText("Remote server connection failed: contact your admin")
+    

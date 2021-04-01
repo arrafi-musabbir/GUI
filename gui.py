@@ -36,8 +36,8 @@ class Ui_MainWindow(object):
         
         self.grapics = grapics(self.centralwidget,self.cwd,self.commDev)
         self.buttons = buttons(self.centralwidget,self.cwd)
+        
         self.connectServer()
-        self.dbErrorWarning()
         self.actionExit = QtWidgets.QShortcut(QtGui.QKeySequence('Esc'),MainWindow)
         self.actionExit.activated.connect(self.action_Exit)
         
@@ -96,18 +96,10 @@ class Ui_MainWindow(object):
             return False
         return self.number
     
-    def dbErrorWarning(self):
-        self.msg = QtWidgets.QMessageBox()
-        self.msg.setIcon(QtWidgets.QMessageBox.Warning)
-        self.msg.setText("Could't establish connection \n with database")
-        # self.msg.setInformativeText("Could't connect to database")
-        self.msg.setWindowTitle("Connection failed")
-        self.msg.setDetailedText("Remote server connection failed: contact your admin")
-        
-        
+           
     def action_Switch(self):
         if self.state == "Main":
-            self.button1_click()
+            self.init_device()
         elif self.state == "showCommPorts":
             self.button8_click()
         
@@ -228,7 +220,7 @@ class Ui_MainWindow(object):
                             try:
                                 nextID = self.db.getTotalID() + 1
                             except:
-                                self.msg.show()
+                                self.grapics.dbmsg.show()
                                 print("database didn't respond")
                                 break
                             id_pass = self.genID.newID(nextID)
@@ -248,21 +240,19 @@ class Ui_MainWindow(object):
                         self.grapics.ring.setEnabled(True)
                     break
                 else:
-                    self.invalidNumber()
                     print("invalid number")
                     continue
-                    
             else:
-                break          
+                break              
         
     def button2_click(self):  
         self.grapics.click_to.adjustSize()
-        try:
-            self.db.clearEntries(1)
-            time.sleep(1)
-        except:
-            pass
-            # print("Communication port already established")
+        if self.db_state == 1:
+            if self.connectServer():
+                self.db.clearEntries(1)
+        else:
+            self.grapics.dbmsg.show()
+
                
     def button3_click(self):
         self.goto_settings()
@@ -326,22 +316,20 @@ class Ui_MainWindow(object):
         
     def connectServer(self):
         print("trying to reconnect server")
-        if self.db_state == 0:
-            if self.db.connectDB():
-                self.db_state = 1
-                icon = QtGui.QIcon()
-                icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.serverOnline), QtGui.QIcon.Active, QtGui.QIcon.On)
-                self.buttons.button9.setIcon(icon)
-            else:
-                icon = QtGui.QIcon()
-                icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
-                self.buttons.button9.setIcon(icon)
-        else:
-            print("server Connection extablished successfully") 
+        if self.db.connectDB():
+            self.db_state = 1
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.serverOnline), QtGui.QIcon.Active, QtGui.QIcon.On)
-            self.buttons.button9.setIcon(icon)     
-        
+            self.buttons.button9.setIcon(icon)
+            return True
+        else:
+            self.grapics.dbmsg.show()
+            self.db_state = 0
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
+            self.buttons.button9.setIcon(icon)
+            return False
+            
         
 if __name__ == "__main__":
     

@@ -54,15 +54,18 @@ class database:
         print("The table has been cleared")
 
     def clearEntries(self, n):
-        try:
-            for i in range(n):
-                self.mycursor.execute(
-                    "DELETE FROM deviceid ORDER BY CreatedOn DESC LIMIT 1")
-            self.myDB.commit()
-            print(n,"number of entries deletation succcessfull")
-        except AttributeError as e:
-            print("Not connected to Database:",e)
-            pass
+        if self.myDB:
+            try:
+                for i in range(n):
+                    self.mycursor.execute(
+                        "DELETE FROM deviceid ORDER BY CreatedOn DESC LIMIT 1")
+                self.myDB.commit()
+                print(n,"number of entries deletation succcessfull")
+            except AttributeError:
+                print("Not connected to Database")
+                pass
+        else:
+            print("helele")
 
     def getTotalID(self):
         try:
