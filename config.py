@@ -33,8 +33,8 @@ button6_width, button6_height = 90, 90
 button8_width, button8_height = 58, 58
 
 
-button9_x,button9_y = 1300, 20
-button9_height, button9_width = 50, 50
+button9_x,button9_y = 1250, 20
+button9_height, button9_width = 45, 45
 
 indicator_x, indicator_y = 60, 60
 indicator_width = 100
@@ -61,3 +61,5 @@ noUsb = "Grapics/no_usb.png"
 connectedUSB = "Grapics/connectedUSB.png"
 reconnectServer = "Grapics/server-down.png"
 serverOnline = "Grapics/server-online.png"
+no_internet = "Grapics/no_internet.png"
+stable_internet = "Grapics/stable_internet.png"

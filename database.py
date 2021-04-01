@@ -1,6 +1,7 @@
 import mysql.connector
 import time
 from datetime import datetime 
+import socket 
 
 class database:
 
@@ -8,6 +9,7 @@ class database:
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
+        self.internetConnectivity = self.checkInternetSocket()
         # self.connectDB()
         
 
@@ -65,7 +67,7 @@ class database:
                 print("Not connected to Database")
                 pass
         else:
-            print("helele")
+            print("database didn't respond")
 
     def getTotalID(self):
         try:
@@ -76,6 +78,17 @@ class database:
         except:
             print("database connection failed")
 
+    def checkInternetSocket(self, host="8.8.8.8", port=53, timeout=3):
+        try:
+            socket.setdefaulttimeout(timeout)
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+            print("stable internet connection")
+            return True
+        except socket.error as ex:
+            # print(ex)
+            print("unstable internet connection")
+            return False
+    
 if __name__ == "__main__":
     print("IN DATABASE")
     a = database()

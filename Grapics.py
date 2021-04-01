@@ -14,6 +14,9 @@ class grapics:
         self.green_ring()
         self.clickTo()
         self.dbErrorWarning()
+        self.noCommWarning()
+        self.internetConnection()
+        self.noInternetWarning()
         
     
     def backGround(self):
@@ -56,7 +59,6 @@ class grapics:
         self.status.adjustSize()
 
     def green_ring(self):
-        
         self.ring = QtWidgets.QLabel(self.centralwidget)
         self.ring.setGeometry(QtCore.QRect(cg.button1_x-5, cg.button1_y-5 , 130, 130))
         self.ring.setText(" ")
@@ -65,6 +67,23 @@ class grapics:
         self.ring.setObjectName("rign")
         self.ring.setEnabled(False)
 
+    def internetConnection(self):
+        self.netConnection = QtWidgets.QLabel(self.centralwidget)
+        self.netConnection.setGeometry(QtCore.QRect(cg.button9_x+50, cg.button9_y-5, cg.button9_width+5, cg.button9_height+8))
+        self.netConnection.setText(" ")
+        self.netConnection.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.no_internet))
+        self.netConnection.setScaledContents(True)
+        self.netConnection.setObjectName("rign")
+        self.netConnection.setEnabled(True)
+
+    def noInternetWarning(self):
+        self.noInternetmsg = QtWidgets.QMessageBox()
+        self.noInternetmsg.setIcon(QtWidgets.QMessageBox.Warning)
+        self.noInternetmsg.setText("No stable internet connection")
+        # self.noInternetmsg.setInformativeText("Could't connect to database")
+        self.noInternetmsg.setWindowTitle("Internet connection failed")
+        self.noInternetmsg.setDetailedText("Can't establish stable internet connection: check if you internet connection source is working")
+    
     def clickTo(self):
         self.click_to = QtWidgets.QLabel(self.centralwidget)
         self.click_to.setGeometry(QtCore.QRect(cg.width//2.9, cg.height-cg.height//3.5, 200, 30))
@@ -115,7 +134,6 @@ class grapics:
         self.showPorts.setObjectName("showPorts")
         
     def portIndiCator(self):
-        
         self.portIndicator = QtWidgets.QLabel(self.centralwidget)
         self.portIndicator.setGeometry(QtCore.QRect(cg.width-50, 20, 25,25))
         self.portIndicator.setText("")
@@ -150,11 +168,11 @@ class grapics:
         self.dbmsg.setWindowTitle("Server connection failed")
         self.dbmsg.setDetailedText("Remote server connection failed: contact your admin")
         
-    def invlidSimWarning(self):
-        self.invSimmsg = QtWidgets.QMessageBox()
-        self.invSimmsg.setIcon(QtWidgets.QMessageBox.Warning)
-        self.invSimmsg.setText("Could't establish connection \n with database")
-        # self.invSimmsg.setInformativeText("Could't connect to database")
-        self.invSimmsg.setWindowTitle("Server connection failed")
-        self.invSimmsg.setDetailedText("Remote server connection failed: contact your admin")
+    def noCommWarning(self):
+        self.noCommmsg = QtWidgets.QMessageBox()
+        self.noCommmsg.setIcon(QtWidgets.QMessageBox.Warning)
+        self.noCommmsg.setText("No communication port found")
+        # self.noCommmsg.setInformativeText("Could't connect to database")
+        self.noCommmsg.setWindowTitle("Serial communication failed")
+        self.noCommmsg.setDetailedText("Can't communicate with a device: check if the device is connected properly")
     

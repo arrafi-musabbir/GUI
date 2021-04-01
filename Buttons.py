@@ -16,6 +16,7 @@ class buttons:
         self.button7()
         self.button8()
         self.reconnectServer()
+
     
             
     def button1(self): #on - off
@@ -132,11 +133,13 @@ class buttons:
         self.button9 = QtWidgets.QPushButton(self.centralwidget)
         self.button9.setGeometry(QtCore.QRect(cg.button9_x, cg.button9_y, cg.button9_width, cg.button9_height))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.serverOnline), QtGui.QIcon.Active, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
         self.button9.setIcon(icon)
         self.button9.setIconSize(QtCore.QSize(cg.button9_width, cg.button9_height))
         self.button9.setStyleSheet("border-radius : 50; border : .1px solid black")
         self.button9.setCheckable(False)
         self.button9.setEnabled(True)
         self.button9.setObjectName("reconnectServer")
+        
+
         

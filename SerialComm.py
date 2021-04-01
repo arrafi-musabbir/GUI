@@ -34,8 +34,7 @@ class commDev:
                     # self.sc.timeout = 3
                 except UnicodeDecodeError:
                     pass
-            # self.sc.close()
-                
+            # self.sc.close()       
         except serial.serialutil.SerialException:
             print("Could not open port")
 

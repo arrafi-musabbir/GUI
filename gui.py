@@ -215,30 +215,36 @@ class Ui_MainWindow(object):
                     print("correct number length")
                     self.offline()
                     self.commDev.auto_establish_comm()
-                    if self.commDev.connectedPort is not None:
-                        if self.commDev.sc_state == 1:
-                            try:
-                                nextID = self.db.getTotalID() + 1
-                            except:
-                                self.grapics.dbmsg.show()
-                                print("database didn't respond")
-                                break
-                            id_pass = self.genID.newID(nextID)
-                            Id,pswd = id_pass[0],id_pass[1]
-                            print("sending id",Id)
-                            self.commDev.communicate(Id)
-                            time.sleep(1)
-                            if self.db.addNew(Id[4:], self.number, pswd, datetime.now()) is False:
-                                print("Duplicate mobile number")
-                                self.commDev.communication = 0
-                                self.commDev.flush_device()
-                                self.duplicateNumber()
-                                continue
-                        self.commDev.close_device()
-                    if self.commDev.communication == 1:
-                        self.online()
-                        self.grapics.ring.setEnabled(True)
-                    break
+                    if self.db.checkInternetSocket():
+                        if self.commDev.connectedPort is not None:
+                            if self.commDev.sc_state == 1:
+                                try:
+                                    nextID = self.db.getTotalID() + 1
+                                except:
+                                    self.grapics.dbmsg.show()
+                                    print("database didn't respond")
+                                    break
+                                id_pass = self.genID.newID(nextID)
+                                Id,pswd = id_pass[0],id_pass[1]
+                                print("sending id",Id)
+                                self.commDev.communicate(Id)
+                                time.sleep(1)
+                                if self.db.addNew(Id[4:], self.number, pswd, datetime.now()) is False:
+                                    print("Duplicate mobile number")
+                                    self.commDev.communication = 0
+                                    self.commDev.flush_device()
+                                    self.duplicateNumber()
+                                    continue
+                            self.commDev.close_device()
+                        else:
+                            self.grapics.noCommmsg.show()
+                        if self.commDev.communication == 1:
+                            self.online()
+                            self.grapics.ring.setEnabled(True)
+                        break
+                    else:
+                        self.grapics.noInternetmsg.show()
+                        break
                 else:
                     print("invalid number")
                     continue
@@ -304,10 +310,6 @@ class Ui_MainWindow(object):
         self.grapics.indicator.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.green_indicator))
         
     def offline(self):
-        # self.state_data = "off"
-        # if self.commDev.sc_state == 1:
-        #     if self.commDev.communicate(self.state_data) == False:
-        #         self.grapics.ring.setEnabled(False)
         self.grapics.ring.setEnabled(False)
         # self.grapics.status.setText("STATUS  <font color=\"red\"> OFF </font> ")
         self.grapics.status.adjustSize() 
@@ -316,19 +318,29 @@ class Ui_MainWindow(object):
         
     def connectServer(self):
         print("trying to reconnect server")
-        if self.db.connectDB():
-            self.db_state = 1
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.serverOnline), QtGui.QIcon.Active, QtGui.QIcon.On)
-            self.buttons.button9.setIcon(icon)
-            return True
+        if self.db.checkInternetSocket():
+            self.grapics.netConnection.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.stable_internet))
+            if self.db.connectDB():
+                self.db_state = 1
+                icon = QtGui.QIcon()
+                icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.serverOnline), QtGui.QIcon.Active, QtGui.QIcon.On)
+                self.buttons.button9.setIcon(icon)
+                return True
+            else:
+                self.grapics.dbmsg.show()
+                self.db_state = 0
+                icon = QtGui.QIcon()
+                icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
+                self.buttons.button9.setIcon(icon)
+                return False
         else:
-            self.grapics.dbmsg.show()
-            self.db_state = 0
+            # pass
+            self.grapics.netConnection.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.no_internet))
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
             self.buttons.button9.setIcon(icon)
-            return False
+            self.grapics.noInternetmsg.show()
+            
             
         
 if __name__ == "__main__":
