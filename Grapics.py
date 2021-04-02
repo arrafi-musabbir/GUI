@@ -17,6 +17,7 @@ class grapics:
         self.noCommWarning()
         self.internetConnection()
         self.noInternetWarning()
+        self.invalidNumber()
         
     
     def backGround(self):
@@ -176,3 +177,22 @@ class grapics:
         self.noCommmsg.setWindowTitle("Serial communication failed")
         self.noCommmsg.setDetailedText("Can't communicate with a device: check if the device is connected properly")
     
+    def invalidNumber(self):
+        self.invNum = QtWidgets.QLabel(self.centralwidget)
+        self.invNum.setGeometry(QtCore.QRect(cg.width//2, cg.height//1.1, 11, 41))
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei UI")
+        font.setPointSize(28)
+        font.setBold(True)
+        font.setWeight(75)
+        name = "Invalid Number"
+        # email = "musabbir.arrafi@gmail.com"
+        self.invNum.setText(name)
+        self.invNum.setFont(font)
+        self.invNum.setStyleSheet("color:rgb(255, 255, 255)")
+        self.invNum.setScaledContents(True)
+        # self.credits.setStyleSheet("QLabel { background-color : black;color:rgb(255, 255, 255)}")
+        self.invNum.setObjectName("invNum")
+        self.invNum.setAlignment(QtCore.Qt.AlignCenter)
+        self.invNum.adjustSize()
+        self.invNum.show()

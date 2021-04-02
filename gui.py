@@ -1,5 +1,4 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-import serial
 import config as cg 
 import sys
 import os
@@ -10,6 +9,7 @@ from database import database
 from GenerateID import genID
 from SerialComm import commDev
 from datetime import datetime
+
 
 class Ui_MainWindow(object):
     
@@ -213,9 +213,8 @@ class Ui_MainWindow(object):
             if self.takeinputs():
                 if len(self.number) == 11:
                     print("correct number length")
-                    self.offline()
-                    self.commDev.auto_establish_comm()
                     if self.db.checkInternetSocket():
+                        self.commDev.auto_establish_comm()
                         if self.commDev.connectedPort is not None:
                             if self.commDev.sc_state == 1:
                                 try:
@@ -247,6 +246,7 @@ class Ui_MainWindow(object):
                         break
                 else:
                     print("invalid number")
+                    self.grapics.invNum.show()
                     continue
             else:
                 break              

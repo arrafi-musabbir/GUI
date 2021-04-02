@@ -17,11 +17,14 @@ class qrGen:
         qr.make(fit=True)
 
         img = qr.make_image(fill_color="black", back_color="white")
-        print(type(img))
-        img.show()
-        img.save(os.path.join(os.getcwd(),"QRs/t.png"))
+        # img.show()
+        self.qr_path = os.path.join(os.getcwd(),"QRs","t1.txt")
+        # img.save(self.qr_path)
     
-    
+    def printCode(self):
+        print("here")
+        os.startfile(self.qr_path,'print')
     
 if __name__ == "__main__":
     a = qrGen()
+    a.printCode()
