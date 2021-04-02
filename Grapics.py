@@ -10,14 +10,16 @@ class grapics:
         self.cwd = cwd
         self.backGround()
         self.indiCator()
-        self.staTus()
+        # self.staTus()
         self.green_ring()
         self.clickTo()
         self.dbErrorWarning()
         self.noCommWarning()
         self.internetConnection()
         self.noInternetWarning()
-        self.invalidNumber()
+        # self.invalidNumber()
+        self.invalidSimWarning()
+        self.duplicateSimWarning()
         
     
     def backGround(self):
@@ -58,6 +60,7 @@ class grapics:
         self.status.setScaledContents(True)
         self.status.setObjectName("status")
         self.status.adjustSize()
+        self.status.hide()
 
     def green_ring(self):
         self.ring = QtWidgets.QLabel(self.centralwidget)
@@ -93,7 +96,7 @@ class grapics:
         font.setPointSize(24)
         font.setWeight(75)
         self.click_to.setFont(font)
-        self.click_to.setText("CLICK SPACE TO CONNECT")
+        self.click_to.setText("CLICK SPACE TO INITIATE")
         self.click_to.setStyleSheet("color:rgb(255, 255, 255)")
         self.click_to.setObjectName("click_to")
         self.click_to.setAlignment(QtCore.Qt.AlignCenter)
@@ -176,7 +179,24 @@ class grapics:
         # self.noCommmsg.setInformativeText("Could't connect to database")
         self.noCommmsg.setWindowTitle("Serial communication failed")
         self.noCommmsg.setDetailedText("Can't communicate with a device: check if the device is connected properly")
-    
+        
+    def invalidSimWarning(self):
+        self.invSimmsg = QtWidgets.QMessageBox()
+        self.invSimmsg.setIcon(QtWidgets.QMessageBox.Warning)
+        self.invSimmsg.setText("Invalid Sim number")
+        # self.noCommmsg.setInformativeText("Could't connect to database")
+        self.invSimmsg.setWindowTitle("Invalid Sim warning")
+        self.invSimmsg.setDetailedText("Can't initiate device: You are trying to input an invalid sim number! Sim number must be consisted of 11 digits")
+        
+    def duplicateSimWarning(self):
+        self.dupSimmsg = QtWidgets.QMessageBox()
+        self.dupSimmsg.setIcon(QtWidgets.QMessageBox.Warning)
+        self.dupSimmsg.setText("Sim number already used")
+        # self.noCommmsg.setInformativeText("Could't connect to database")
+        self.dupSimmsg.setWindowTitle("Duplicate Sim warning")
+        self.dupSimmsg.setDetailedText("Can't initiate device: You have already used this sim once to initiate a device. Input a new sim number and try again")
+
+            
     def invalidNumber(self):
         self.invNum = QtWidgets.QLabel(self.centralwidget)
         self.invNum.setGeometry(QtCore.QRect(cg.width//2, cg.height//1.1, 11, 41))

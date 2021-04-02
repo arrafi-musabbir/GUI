@@ -4,22 +4,22 @@ import os
 class qrGen:
     
     def __init__(self):
-        self.genQR()
+        pass
     
-    def genQR(self):
+    def genQR(self,id,sim):
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
             box_size=10,
             border=4,
         )
-        qr.add_data('ID: '+'1103202103170002'+'\n'+"Sim number: 01862515191")
+        qr.add_data('Device ID: '+str(id)+'\n'+"Sim number: "+str(sim))
         qr.make(fit=True)
 
         img = qr.make_image(fill_color="black", back_color="white")
-        # img.show()
-        self.qr_path = os.path.join(os.getcwd(),"QRs","t1.txt")
-        # img.save(self.qr_path)
+        img.show()
+        self.qr_path = os.path.join(os.getcwd(),("QRs/"+str(sim)+".png"))
+        img.save(self.qr_path)
     
     def printCode(self):
         print("here")
@@ -27,4 +27,4 @@ class qrGen:
     
 if __name__ == "__main__":
     a = qrGen()
-    a.printCode()
+    # a.genQR(23,23)

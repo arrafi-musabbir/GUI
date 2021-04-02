@@ -104,7 +104,7 @@ class Ui_MainWindow(object):
             self.buttons.button2.setEnabled(False)
             self.buttons.button3.hide()
             self.buttons.button3.setEnabled(False)
-            self.grapics.status.hide() 
+            # self.grapics.status.hide() 
             self.grapics.ring.hide()
             self.grapics.click_to.hide()
         elif self.state == "showCommPorts":
@@ -118,9 +118,7 @@ class Ui_MainWindow(object):
             self.grapics.click_to.hide()
         elif self.state == "credits":
             self.grapics.credits.hide()
-            
         self.backgroundBlur("enable")
-       
         self.buttons.button4.show()
         self.buttons.button4.setEnabled(True)
         self.buttons.button5.show()
@@ -129,7 +127,6 @@ class Ui_MainWindow(object):
         self.buttons.button6.setEnabled(True)
         self.buttons.button7.show()
         self.buttons.button7.setEnabled(True)
-        
         self.state = "Settings"
     
     def backgroundBlur(self, able):
@@ -140,8 +137,8 @@ class Ui_MainWindow(object):
             self.blur_effect.setEnabled(False)
             
     def loadMain(self):
-        if self.commDev.commPort is not None:
-                self.grapics.ring.setEnabled(True)
+        # if self.commDev.commPort is not None:
+        #         self.grapics.ring.setEnabled(False)
         self.backgroundBlur("disable")
         self.grapics.indicator.show()
         self.buttons.button1.show()
@@ -159,7 +156,7 @@ class Ui_MainWindow(object):
         self.buttons.button7.hide()
         self.buttons.button7.setEnabled(False)
         self.actionSwitch.activated.connect(self.action_Switch)
-        self.grapics.status.show()
+        # self.grapics.status.show()
         self.grapics.ring.show()
         self.grapics.click_to.show()
         self.grapics.click_to.setText("CLICK SPACE TO CONNECT")
@@ -187,11 +184,24 @@ class Ui_MainWindow(object):
         self.grapics.click_to.show()
         self.grapics.click_to.adjustSize()
 
+    def loadRegistration(self):
+        self.state = "registration"
+        self.backgroundBlur("enable")
+        self.buttons.button1.hide()
+        self.buttons.button1.setEnabled(False)
+        self.buttons.button2.hide()
+        self.buttons.button2.setEnabled(False)
+        self.buttons.button3.hide()
+        self.buttons.button3.setEnabled(False)
+        self.grapics.ring.hide()
+        self.grapics.click_to.hide()
+
     def init_device(self):
+        
         print("push button clikced")
         self.offline()
         while True:
-            # self.backgroundBlur("enable")
+            self.loadRegistration()
             if self.takeinputs():
                 if len(self.number) == 11:
                     print("correct number length")
@@ -204,6 +214,7 @@ class Ui_MainWindow(object):
                                 except:
                                     self.grapics.dbmsg.show()
                                     print("database didn't respond")
+                                    # self.loadMain()
                                     break
                                 id_pass = self.genID.newID(nextID)
                                 Id,pswd = id_pass[0],id_pass[1]
@@ -218,6 +229,7 @@ class Ui_MainWindow(object):
                                     self.commDev.flush_device()
                                     self.commDev.close_device()
                                     self.grapics.dupSimmsg.show()
+                                    # self.loadMain()
                                     break
                             self.commDev.close_device()
                         else:
@@ -225,16 +237,21 @@ class Ui_MainWindow(object):
                         if self.commDev.communication == 1:
                             self.online()
                             self.grapics.ring.setEnabled(True)
+                        self.loadMain()
                         break
                     else:
+                        self.connectServer()
                         self.grapics.noInternetmsg.show()
+                        # self.loadMain()
                         break
                 else:
                     print("invalid number")
                     self.grapics.invSimmsg.show()
+                    # self.loadMain()
                     break
-            else:
-                break              
+            else:    
+                break 
+        self.loadMain()             
         
     def button2_click(self):  
         self.grapics.click_to.adjustSize()
@@ -243,8 +260,7 @@ class Ui_MainWindow(object):
                 self.db.clearEntries(1)
         else:
             self.grapics.dbmsg.show()
-
-               
+             
     def button3_click(self):
         self.goto_settings()
     
@@ -289,7 +305,7 @@ class Ui_MainWindow(object):
     def online(self):
         # time.sleep(1)
         self.grapics.status.setText("<font color=\"white\">NEW DEVICE INITIATED</font>")
-        self.grapics.status.adjustSize() 
+        # self.grapics.status.adjustSize() 
         self.grapics.click_to.setText("CLICK SPACE TO CONNECT")
         self.grapics.click_to.adjustSize()
         self.grapics.indicator.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.green_indicator))
@@ -297,7 +313,7 @@ class Ui_MainWindow(object):
     def offline(self):
         self.grapics.ring.setEnabled(False)
         # self.grapics.status.setText("STATUS  <font color=\"red\"> OFF </font> ")
-        self.grapics.status.adjustSize() 
+        # self.grapics.status.adjustSize() 
         self.grapics.click_to.setText("CLICK SPACE TO CONNECT")
         self.grapics.indicator.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.red_indicator))
         
