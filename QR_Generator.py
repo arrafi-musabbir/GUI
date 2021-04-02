@@ -17,7 +17,7 @@ class qrGen:
         qr.make(fit=True)
 
         img = qr.make_image(fill_color="black", back_color="white")
-        img.show()
+        # img.show()
         self.qr_path = os.path.join(os.getcwd(),("QRs/"+str(sim)+".png"))
         img.save(self.qr_path)
     

@@ -10,7 +10,7 @@ class grapics:
         self.cwd = cwd
         self.backGround()
         self.indiCator()
-        # self.staTus()
+        self.staTus()
         self.green_ring()
         self.clickTo()
         self.dbErrorWarning()
@@ -20,6 +20,7 @@ class grapics:
         # self.invalidNumber()
         self.invalidSimWarning()
         self.duplicateSimWarning()
+        # self.initAnimation()
         
     
     def backGround(self):
@@ -43,7 +44,7 @@ class grapics:
         self.indicator.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.red_indicator))
         self.indicator.setScaledContents(True)
         self.indicator.setObjectName("indicator")
-        self.indicator.show()
+        self.indicator.hide()
         
     def staTus(self):
         
@@ -54,7 +55,7 @@ class grapics:
         font.setPointSize(50)
         font.setBold(True)
         font.setWeight(75)
-        self.status.setText("NO DEVICE CONNECTED <font color=\"red\"> </font> ")
+        self.status.setText("NEW DEVICE INITIATED") #<font color=\"red\"> </font> ")
         self.status.setFont(font)
         self.status.setStyleSheet("color:rgb(255, 255, 255)")
         self.status.setScaledContents(True)
@@ -71,7 +72,20 @@ class grapics:
         self.ring.setObjectName("rign")
         self.ring.setEnabled(False)
 
+    def initAnimation(self):
+        # Label Create
+        self.initAnim = QtWidgets.QLabel(self.centralwidget)
+        self.initAnim .setGeometry(QtCore.QRect(25, 25, 200, 200))
+        self.initAnim .setMinimumSize(QtCore.QSize(250, 250))
+        self.initAnim .setMaximumSize(QtCore.QSize(250, 250))
+        self.initAnim .setObjectName("lb1")
+        # Loading the GIF
+        self.movie = QtGui.QMovie("Infinity.gif")
+        self.movie.backgroundColor()
+        self.initAnim.setMovie(self.movie)
+
     def internetConnection(self):
+        
         self.netConnection = QtWidgets.QLabel(self.centralwidget)
         self.netConnection.setGeometry(QtCore.QRect(cg.button9_x+50, cg.button9_y-5, cg.button9_width+5, cg.button9_height+8))
         self.netConnection.setText(" ")
@@ -81,6 +95,7 @@ class grapics:
         self.netConnection.setEnabled(True)
 
     def noInternetWarning(self):
+        
         self.noInternetmsg = QtWidgets.QMessageBox()
         self.noInternetmsg.setIcon(QtWidgets.QMessageBox.Warning)
         self.noInternetmsg.setText("No stable internet connection")
@@ -89,6 +104,7 @@ class grapics:
         self.noInternetmsg.setDetailedText("Can't establish stable internet connection: check if you internet connection source is working")
     
     def clickTo(self):
+        
         self.click_to = QtWidgets.QLabel(self.centralwidget)
         self.click_to.setGeometry(QtCore.QRect(cg.width//2.9, cg.height-cg.height//3.5, 200, 30))
         font = QtGui.QFont()
@@ -103,6 +119,7 @@ class grapics:
         self.click_to.adjustSize()
 
     def connectedport(self):
+        
         self.port = str(self.commDev.commPort).upper()
         self.selectedPort = QtWidgets.QLabel(self.centralwidget)
         self.selectedPort.setGeometry(QtCore.QRect(cg.width//2.8, cg.height//1.4 - 40, 10, 30))
@@ -119,6 +136,7 @@ class grapics:
         self.selectedPort.adjustSize()
 
     def availablePorts(self):
+        
         self.ports = self.commDev.find_com_port()
         self.showPorts = QtWidgets.QLabel(self.centralwidget)
         self.showPorts.setGeometry(QtCore.QRect(cg.width//2.3, cg.height//2.3,  cg.button6_width, cg.button6_height))
@@ -138,6 +156,7 @@ class grapics:
         self.showPorts.setObjectName("showPorts")
         
     def portIndiCator(self):
+        
         self.portIndicator = QtWidgets.QLabel(self.centralwidget)
         self.portIndicator.setGeometry(QtCore.QRect(cg.width-50, 20, 25,25))
         self.portIndicator.setText("")
@@ -146,6 +165,7 @@ class grapics:
         self.portIndicator.setObjectName("portIndicator")
 
     def showCredits(self):
+        
         self.credits = QtWidgets.QLabel(self.centralwidget)
         self.credits.setGeometry(QtCore.QRect(cg.width//5, cg.height/2, 11, 41))
         font = QtGui.QFont()
@@ -165,6 +185,7 @@ class grapics:
         self.credits.adjustSize()
         
     def dbErrorWarning(self):
+        
         self.dbmsg = QtWidgets.QMessageBox()
         self.dbmsg.setIcon(QtWidgets.QMessageBox.Warning)
         self.dbmsg.setText("Could't establish connection \n with database")
@@ -173,6 +194,7 @@ class grapics:
         self.dbmsg.setDetailedText("Remote server connection failed: contact your admin")
         
     def noCommWarning(self):
+        
         self.noCommmsg = QtWidgets.QMessageBox()
         self.noCommmsg.setIcon(QtWidgets.QMessageBox.Warning)
         self.noCommmsg.setText("No communication port found")
@@ -181,6 +203,7 @@ class grapics:
         self.noCommmsg.setDetailedText("Can't communicate with a device: check if the device is connected properly")
         
     def invalidSimWarning(self):
+        
         self.invSimmsg = QtWidgets.QMessageBox()
         self.invSimmsg.setIcon(QtWidgets.QMessageBox.Warning)
         self.invSimmsg.setText("Invalid Sim number")
@@ -189,6 +212,7 @@ class grapics:
         self.invSimmsg.setDetailedText("Can't initiate device: You are trying to input an invalid sim number! Sim number must be consisted of 11 digits")
         
     def duplicateSimWarning(self):
+        
         self.dupSimmsg = QtWidgets.QMessageBox()
         self.dupSimmsg.setIcon(QtWidgets.QMessageBox.Warning)
         self.dupSimmsg.setText("Sim number already used")
@@ -198,6 +222,7 @@ class grapics:
 
             
     def invalidNumber(self):
+        
         self.invNum = QtWidgets.QLabel(self.centralwidget)
         self.invNum.setGeometry(QtCore.QRect(cg.width//2, cg.height//1.1, 11, 41))
         font = QtGui.QFont()

@@ -85,10 +85,13 @@ class Ui_MainWindow(object):
             self.goto_settings()
         elif self.state == "credits":
             self.goto_settings()
+        elif self.state == "initiate":
+            self.loadMain()
         else:
             # print("Going offline")
             # time.sleep(1)
-            self.offline()
+            self.db.disconnect()
+            # self.offline()
             print("Exiting...")
             time.sleep(1)
             # print("...")
@@ -139,8 +142,10 @@ class Ui_MainWindow(object):
     def loadMain(self):
         # if self.commDev.commPort is not None:
         #         self.grapics.ring.setEnabled(False)
+        # self.grapics.movie.stop()
+        # self.grapics.initAnim.hide()
         self.backgroundBlur("disable")
-        self.grapics.indicator.show()
+        self.grapics.indicator.hide()
         self.buttons.button1.show()
         self.buttons.button1.setEnabled(True)
         self.buttons.button2.show()
@@ -159,7 +164,7 @@ class Ui_MainWindow(object):
         # self.grapics.status.show()
         self.grapics.ring.show()
         self.grapics.click_to.show()
-        self.grapics.click_to.setText("CLICK SPACE TO CONNECT")
+        self.grapics.click_to.setText("CLICK SPACE TO INITIATE")
         self.grapics.click_to.adjustSize()
         self.state = "Main"
     
@@ -185,7 +190,7 @@ class Ui_MainWindow(object):
         self.grapics.click_to.adjustSize()
 
     def loadRegistration(self):
-        self.state = "registration"
+        self.state = "initiate"
         self.backgroundBlur("enable")
         self.buttons.button1.hide()
         self.buttons.button1.setEnabled(False)
@@ -195,9 +200,12 @@ class Ui_MainWindow(object):
         self.buttons.button3.setEnabled(False)
         self.grapics.ring.hide()
         self.grapics.click_to.hide()
+        self.grapics.indicator.show()
+        self.buttons.button4.show()
+        self.buttons.button4.setEnabled(True)
 
     def init_device(self):
-        
+        # self.state = "initiate"
         print("push button clikced")
         self.offline()
         while True:
@@ -251,7 +259,7 @@ class Ui_MainWindow(object):
                     break
             else:    
                 break 
-        self.loadMain()             
+        # self.loadMain()             
         
     def button2_click(self):  
         self.grapics.click_to.adjustSize()
@@ -271,6 +279,8 @@ class Ui_MainWindow(object):
             self.goto_settings()
         elif self.state == "credits":
             self.goto_settings()
+        elif self.state == "initiate":
+            self.loadMain()
     
     def button6_click(self):
         self.gotoCommPorts()
@@ -305,9 +315,10 @@ class Ui_MainWindow(object):
     def online(self):
         # time.sleep(1)
         self.grapics.status.setText("<font color=\"white\">NEW DEVICE INITIATED</font>")
-        # self.grapics.status.adjustSize() 
-        self.grapics.click_to.setText("CLICK SPACE TO CONNECT")
-        self.grapics.click_to.adjustSize()
+        self.grapics.status.show()
+        self.grapics.status.adjustSize() 
+        # self.grapics.click_to.setText("CLICK SPACE TO CONNECT")
+        # self.grapics.click_to.adjustSize()
         self.grapics.indicator.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.green_indicator))
         
     def offline(self):
@@ -335,7 +346,6 @@ class Ui_MainWindow(object):
                 self.buttons.button9.setIcon(icon)
                 return False
         else:
-            # pass
             self.grapics.netConnection.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.no_internet))
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
