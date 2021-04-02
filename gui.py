@@ -9,6 +9,7 @@ from database import database
 from GenerateID import genID
 from SerialComm import commDev
 from datetime import datetime
+from QR_Generator import qrGen
 
 
 class Ui_MainWindow(object):
@@ -18,6 +19,7 @@ class Ui_MainWindow(object):
         self.db_state = self.db.db_state
         self.total_ids = self.db.totalIDs
         self.genID = genID()
+        self.qr = qrGen()
         self.commDev = commDev()
         self.sc_state = self.commDev.sc_state
         self.cwd = os.getcwd()
@@ -69,34 +71,7 @@ class Ui_MainWindow(object):
         else:
             return False
         return self.number
-    
-    def duplicateNumber(self):
-        Number, ok = QtWidgets.QInputDialog.getText(
-             self.centralwidget , 'Duplicate SIM Error!', 'SIM already used! Enter New Sim Number:')
-        if ok:
-            try:
-                self.number = str(Number)
-                print(self.number)
-            except IndexError:
-                pass
-        else:
-            return False
-        return self.number
-    
-    def invalidNumber(self):
-        Number, ok = QtWidgets.QInputDialog.getText(
-             self.centralwidget , 'Invalid SIM Error!', 'Invalid sim number! Enter New Sim Number:')
-        if ok:
-            try:
-                self.number = str(Number)
-                print(self.number)
-            except IndexError:
-                pass
-        else:
-            return False
-        return self.number
-    
-           
+            
     def action_Switch(self):
         if self.state == "Main":
             self.init_device()
@@ -144,8 +119,7 @@ class Ui_MainWindow(object):
         elif self.state == "credits":
             self.grapics.credits.hide()
             
-        self.blur_effect = QtWidgets.QGraphicsBlurEffect() 
-        self.grapics.background.setGraphicsEffect(self.blur_effect)
+        self.backgroundBlur("enable")
        
         self.buttons.button4.show()
         self.buttons.button4.setEnabled(True)
@@ -157,11 +131,18 @@ class Ui_MainWindow(object):
         self.buttons.button7.setEnabled(True)
         
         self.state = "Settings"
-           
+    
+    def backgroundBlur(self, able):
+        if able == "enable":
+            self.blur_effect = QtWidgets.QGraphicsBlurEffect() 
+            self.grapics.background.setGraphicsEffect(self.blur_effect)
+        else:
+            self.blur_effect.setEnabled(False)
+            
     def loadMain(self):
         if self.commDev.commPort is not None:
                 self.grapics.ring.setEnabled(True)
-        self.blur_effect.setEnabled(False)
+        self.backgroundBlur("disable")
         self.grapics.indicator.show()
         self.buttons.button1.show()
         self.buttons.button1.setEnabled(True)
@@ -210,6 +191,7 @@ class Ui_MainWindow(object):
         print("push button clikced")
         self.offline()
         while True:
+            # self.backgroundBlur("enable")
             if self.takeinputs():
                 if len(self.number) == 11:
                     print("correct number length")
@@ -225,15 +207,18 @@ class Ui_MainWindow(object):
                                     break
                                 id_pass = self.genID.newID(nextID)
                                 Id,pswd = id_pass[0],id_pass[1]
-                                print("sending id",Id)
+                                print("sending id",Id[4:])
                                 self.commDev.communicate(Id)
                                 time.sleep(1)
-                                if self.db.addNew(Id[4:], self.number, pswd, datetime.now()) is False:
+                                if self.db.addNew(Id[4:], self.number, pswd, datetime.now()):
+                                    self.qr.genQR(Id[4:],self.number)
+                                else:
                                     print("Duplicate mobile number")
                                     self.commDev.communication = 0
                                     self.commDev.flush_device()
-                                    self.duplicateNumber()
-                                    continue
+                                    self.commDev.close_device()
+                                    self.grapics.dupSimmsg.show()
+                                    break
                             self.commDev.close_device()
                         else:
                             self.grapics.noCommmsg.show()
@@ -246,8 +231,8 @@ class Ui_MainWindow(object):
                         break
                 else:
                     print("invalid number")
-                    self.grapics.invNum.show()
-                    continue
+                    self.grapics.invSimmsg.show()
+                    break
             else:
                 break              
         
