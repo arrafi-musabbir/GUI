@@ -4,8 +4,8 @@ import config as cg
 class grapics:
     
     def __init__(self,cw,cwd,sc):
-        self.commDev = sc
-        self.serial = 0
+        # self.commDev = sc
+        # self.serial = 0
         self.centralwidget = cw
         self.cwd = cwd
         self.backGround()
@@ -71,6 +71,7 @@ class grapics:
         self.ring.setScaledContents(True)
         self.ring.setObjectName("rign")
         self.ring.setEnabled(False)
+        self.ring.hide()
 
     def initAnimation(self):
         # Label Create

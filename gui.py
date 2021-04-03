@@ -111,14 +111,14 @@ class Ui_MainWindow(object):
             self.grapics.ring.hide()
             self.grapics.click_to.hide()
         elif self.state == "showCommPorts":
-            self.actionSwitch.disconnect()
-            self.grapics.showPorts.setEnabled(False)
-            self.grapics.showPorts.hide()
-            self.grapics.selectedPort.hide()
-            self.grapics.selectedPort.hide()
+            # self.actionSwitch.disconnect()
+            # self.grapics.showPorts.setEnabled(False)
+            # self.grapics.showPorts.hide()
+            # self.grapics.selectedPort.hide()
+            # self.grapics.selectedPort.hide()
             self.buttons.button8.hide()
             self.buttons.button8.setEnabled(False)
-            self.grapics.click_to.hide()
+            # self.grapics.click_to.hide()
         elif self.state == "credits":
             self.grapics.credits.hide()
         self.backgroundBlur("enable")
@@ -162,7 +162,7 @@ class Ui_MainWindow(object):
         self.buttons.button7.setEnabled(False)
         self.actionSwitch.activated.connect(self.action_Switch)
         # self.grapics.status.show()
-        self.grapics.ring.show()
+        self.grapics.ring.hide()
         self.grapics.click_to.show()
         self.grapics.click_to.setText("CLICK SPACE TO INITIATE")
         self.grapics.click_to.adjustSize()
@@ -170,7 +170,7 @@ class Ui_MainWindow(object):
     
     def gotoCommPorts(self):
         self.state = "showCommPorts"
-        self.actionSwitch.activated.connect(self.action_Switch)
+        # self.actionSwitch.activated.connect(self.action_Switch)
         self.buttons.button4.show()
         self.buttons.button4.setEnabled(True)
         self.buttons.button5.hide()
@@ -181,13 +181,13 @@ class Ui_MainWindow(object):
         self.buttons.button7.setEnabled(False)
         self.buttons.button8.show()
         self.buttons.button8.setEnabled(True)
-        self.grapics.availablePorts()
-        self.grapics.showPorts.show()
-        self.grapics.connectedport()
-        self.grapics.selectedPort.show()
-        self.grapics.click_to.setText("CLICK SPACE TO SWITCH PORTS")
-        self.grapics.click_to.show()
-        self.grapics.click_to.adjustSize()
+        # self.grapics.availablePorts()
+        # self.grapics.showPorts.show()
+        # self.grapics.connectedport()
+        # self.grapics.selectedPort.show()
+        # self.grapics.click_to.setText("CLICK SPACE TO SWITCH PORTS")
+        # self.grapics.click_to.show()
+        # self.grapics.click_to.adjustSize()
 
     def loadRegistration(self):
         self.state = "initiate"
@@ -203,6 +203,25 @@ class Ui_MainWindow(object):
         self.grapics.indicator.show()
         self.buttons.button4.show()
         self.buttons.button4.setEnabled(True)
+
+    def loadRegistrationAgain(self):
+        self.state = "initiate"
+        self.backgroundBlur("enable")
+        self.buttons.button1.hide()
+        self.buttons.button1.setEnabled(False)
+        self.buttons.button2.hide()
+        self.buttons.button2.setEnabled(False)
+        self.buttons.button3.hide()
+        self.buttons.button3.setEnabled(False)
+        self.grapics.ring.hide()
+        self.grapics.click_to.hide()
+        self.grapics.indicator.show()
+        self.buttons.button4.show()
+        self.buttons.button4.setEnabled(True)
+        self.buttons.button1.setEnabled(True)
+        self.buttons.button1.show()
+        self.grapics.ring.show()
+        self.grapics.click_to.show()
 
     def init_device(self):
         # self.state = "initiate"
@@ -259,7 +278,7 @@ class Ui_MainWindow(object):
                     break
             else:    
                 break 
-        # self.loadMain()             
+        self.loadRegistrationAgain()             
         
     def button2_click(self):  
         self.grapics.click_to.adjustSize()
@@ -325,7 +344,7 @@ class Ui_MainWindow(object):
         self.grapics.ring.setEnabled(False)
         # self.grapics.status.setText("STATUS  <font color=\"red\"> OFF </font> ")
         # self.grapics.status.adjustSize() 
-        self.grapics.click_to.setText("CLICK SPACE TO CONNECT")
+        self.grapics.click_to.setText("CLICK SPACE TO INITIATE")
         self.grapics.indicator.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.red_indicator))
         
     def connectServer(self):
