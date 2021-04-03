@@ -14,7 +14,7 @@ class buttons:
         self.pushbutton5()
         self.pushbutton6()
         self.pushbutton7()
-        self.pushbutton8()
+        # self.pushbutton8()
         self.reconnectServer()
         self.delete_allEntries()
         self.delete_entries()
@@ -91,7 +91,7 @@ class buttons:
         self.button5.hide()
         self.button5.setObjectName("credits")
         
-    def pushbutton6(self): # show available comports
+    def pushbutton6(self): # show server settings
         self.button6 = QtWidgets.QPushButton(self.centralwidget)
         self.button6.setGeometry(QtCore.QRect(cg.button1_x+10,cg.button1_y-50, cg.button6_width, cg.button6_height))
         icon = QtGui.QIcon()
@@ -130,7 +130,7 @@ class buttons:
         self.button8.hide()
         self.button8.setObjectName("changeCommPort") 
         
-    def reconnectServer(self):
+    def reconnectServer(self): # reconnect server
         self.button9 = QtWidgets.QPushButton(self.centralwidget)
         self.button9.setGeometry(QtCore.QRect(cg.button9_x, cg.button9_y, cg.button9_width, cg.button9_height))
         icon = QtGui.QIcon()
@@ -142,26 +142,26 @@ class buttons:
         self.button9.setEnabled(True)
         self.button9.setObjectName("reconnectServer")
         
-    def delete_entries(self):
+    def delete_entries(self): # delete a number of entries
         self.button10 = QtWidgets.QPushButton(self.centralwidget)
-        self.button10.setGeometry(QtCore.QRect(cg.button1_x-10,cg.button1_y-40, 140, 140))
+        self.button10.setGeometry(QtCore.QRect(cg.button10_x, cg.button10_y, cg.button10_width, cg.button10_height))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.del_entries), QtGui.QIcon.Active, QtGui.QIcon.On)
         self.button10.setIcon(icon)
-        self.button10.setIconSize(QtCore.QSize(140, 140))
+        self.button10.setIconSize(QtCore.QSize(cg.button10_width, cg.button10_height))
         self.button10.setStyleSheet("border-radius : 50; border : .1px solid black")
         self.button10.setCheckable(False)
         self.button10.setEnabled(False)
         self.button10.hide()
         self.button10.setObjectName("delete_entries")
         
-    def delete_allEntries(self):
+    def delete_allEntries(self): # delete all entries
         self.button11 = QtWidgets.QPushButton(self.centralwidget)
-        self.button11.setGeometry(QtCore.QRect(cg.button1_x-10,cg.button1_y+100, 140, 140))
+        self.button11.setGeometry(QtCore.QRect(cg.button10_x, cg.button10_y+150, cg.button10_width, cg.button10_height))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.del_all_entries), QtGui.QIcon.Active, QtGui.QIcon.On)
         self.button11.setIcon(icon)
-        self.button11.setIconSize(QtCore.QSize(140, 140))
+        self.button11.setIconSize(QtCore.QSize(cg.button10_width, cg.button10_height))
         self.button11.setStyleSheet("border-radius : 50; border : .1px solid black")
         self.button11.setCheckable(False)
         self.button11.setEnabled(False)

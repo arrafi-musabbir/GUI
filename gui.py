@@ -25,6 +25,7 @@ class Ui_MainWindow(object):
         self.cwd = os.getcwd()
         self.number = "0"
         self.state = "Main"
+        self.db_stored = 0
         
         MainWindow.setObjectName("MainWindow")
         
@@ -56,8 +57,10 @@ class Ui_MainWindow(object):
         self.buttons.button4.clicked.connect(self.button4_click)
         self.buttons.button5.clicked.connect(self.button5_click)
         self.buttons.button6.clicked.connect(self.button6_click)
-        self.buttons.button8.clicked.connect(self.button8_click)
+        # self.buttons.button8.clicked.connect(self.button8_click)
         self.buttons.button9.clicked.connect(self.connectServer)
+        self.buttons.button10.clicked.connect(self.deleteXentries)
+        self.buttons.button11.clicked.connect(self.deleteAllentries)
 
     def takeinputs(self):
         Number, ok = QtWidgets.QInputDialog.getText(
@@ -75,8 +78,8 @@ class Ui_MainWindow(object):
     def confirmDeletation(self):
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Information)
-        msgBox.setText("This action will delete the last entry\nfrom server. Do you want to proceed?")
-        msgBox.setWindowTitle("This action is irreversible!")
+        msgBox.setText("This action is irreversible!\nDo you still want to proceed?")
+        msgBox.setWindowTitle("Cleanup protocol")
         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
         # msgBox.buttonClicked.connect(msgButtonClick)
         returnValue = msgBox.exec()
@@ -85,7 +88,21 @@ class Ui_MainWindow(object):
             return True
         else:
             return False
-            
+    
+    def confirmAllDeletation(self):
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox.setText("This action will cleanup all the entries from the current session\nand is irreversible! Do you still want to proceed?")
+        msgBox.setWindowTitle("Cleanup protocol")
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+        # msgBox.buttonClicked.connect(msgButtonClick)
+        returnValue = msgBox.exec()
+        if returnValue == QtWidgets.QMessageBox.Ok:
+            print('OK clicked')
+            return True
+        else:
+            return False
+    
     def action_Switch(self):
         if self.state == "Main":
             self.init_device()
@@ -95,7 +112,7 @@ class Ui_MainWindow(object):
     def action_Exit(self):
         if self.state == "Settings":
             self.loadMain()
-        elif self.state == "showCommPorts":
+        elif self.state == "dbSettings":
             self.goto_settings()
         elif self.state == "credits":
             self.goto_settings()
@@ -121,17 +138,13 @@ class Ui_MainWindow(object):
             self.buttons.button2.setEnabled(False)
             self.buttons.button3.hide()
             self.buttons.button3.setEnabled(False)
-            # self.grapics.status.hide() 
             self.grapics.ring.hide()
             self.grapics.click_to.hide()
-        elif self.state == "showCommPorts":
-            # self.actionSwitch.disconnect()
-            # self.grapics.showPorts.setEnabled(False)
-            # self.grapics.showPorts.hide()
-            # self.grapics.selectedPort.hide()
-            # self.grapics.selectedPort.hide()
-            self.buttons.button8.hide()
-            self.buttons.button8.setEnabled(False)
+        elif self.state == "dbSettings":
+            self.buttons.button10.setEnabled(False)
+            self.buttons.button10.hide()
+            self.buttons.button11.setEnabled(False)
+            self.buttons.button11.hide()
             # self.grapics.click_to.hide()
         elif self.state == "credits":
             self.grapics.credits.hide()
@@ -179,7 +192,7 @@ class Ui_MainWindow(object):
         self.state = "Main"
     
     def gotoCommPorts(self):
-        self.state = "showCommPorts"
+        self.state = "dbSettings"
         # self.actionSwitch.activated.connect(self.action_Switch)
         self.buttons.button4.show()
         self.buttons.button4.setEnabled(True)
@@ -189,19 +202,10 @@ class Ui_MainWindow(object):
         self.buttons.button6.setEnabled(False)
         self.buttons.button7.hide()
         self.buttons.button7.setEnabled(False)
-        self.buttons.button8.show()
-        self.buttons.button8.setEnabled(True)
         self.buttons.button10.show()
         self.buttons.button10.setEnabled(True)
         self.buttons.button11.show()
         self.buttons.button11.setEnabled(True)
-        # self.grapics.availablePorts()
-        # self.grapics.showPorts.show()
-        # self.grapics.connectedport()
-        # self.grapics.selectedPort.show()
-        # self.grapics.click_to.setText("CLICK SPACE TO SWITCH PORTS")
-        # self.grapics.click_to.show()
-        # self.grapics.click_to.adjustSize()
 
     def loadRegistration(self):
         self.state = "initiate"
@@ -248,6 +252,7 @@ class Ui_MainWindow(object):
                     print("correct number length")
                     if self.db.checkInternetSocket():
                         self.commDev.auto_establish_comm()
+                        time.sleep(1)
                         if self.commDev.connectedPort is not None:
                             if self.commDev.sc_state == 1:
                                 try:
@@ -264,6 +269,8 @@ class Ui_MainWindow(object):
                                 time.sleep(1)
                                 if self.db.addNew(Id[4:], self.number, pswd, datetime.now()):
                                     self.qr.genQR(Id[4:],self.number)
+                                    self.db_stored += 1
+                                    print("Initiated in this session", self.db_stored)
                                 else:
                                     print("Duplicate mobile number")
                                     self.commDev.communication = 0
@@ -311,7 +318,7 @@ class Ui_MainWindow(object):
     def button4_click(self):
         if self.state == "Settings":
             self.loadMain()
-        elif self.state == "showCommPorts":
+        elif self.state == "dbSettings":
             self.goto_settings()
         elif self.state == "credits":
             self.goto_settings()
@@ -347,6 +354,28 @@ class Ui_MainWindow(object):
         # if self.commDev.connectedPort is None:
         #     self.grapics.ring.setEnabled(False)
         pass
+    
+    def takeXentries(self):
+        Number, ok = QtWidgets.QInputDialog.getText(
+             self.centralwidget , 'Clear Records', 'How many entries you want to delete?')
+        if ok:
+            try:
+                # print(Number)
+                self.Xnumber = str(Number)
+            except IndexError:
+                pass
+        else:
+            return False
+        return self.Xnumber
+    
+    def deleteXentries(self):
+        if self.takeXentries():
+            if self.confirmDeletation():
+                self.db.clearEntries(int(self.Xnumber))
+                
+    def deleteAllentries(self):
+        if self.confirmAllDeletation():
+            self.db.clearEntries(self.db_stored)
 
     def online(self):
         # time.sleep(1)

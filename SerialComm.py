@@ -88,6 +88,7 @@ class commDev:
 if __name__ == "__main__":
     a = commDev()
     a.auto_establish_comm()
+    a.sc.flush()
     # a.communicate('12345678901234567890')
     # p = str(11111111111111111111).encode()
     # print(len(p))
