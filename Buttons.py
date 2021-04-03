@@ -16,6 +16,8 @@ class buttons:
         self.pushbutton7()
         self.pushbutton8()
         self.reconnectServer()
+        self.delete_allEntries()
+        self.delete_entries()
  
     def pushbutton1(self): #on - off
         self.button1 = QtWidgets.QPushButton(self.centralwidget)
@@ -30,7 +32,7 @@ class buttons:
         self.button1.setObjectName("push_button")
         # self.button1.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         
-    def pushbutton2(self): # reconnect commPorts
+    def pushbutton2(self): # delete last entry
         self.button2 = QtWidgets.QPushButton(self.centralwidget)
         self.button2.setGeometry(QtCore.QRect(cg.button2_x,cg.button2_y, cg.button2_width, cg.button2_height))
         icon = QtGui.QIcon()
@@ -139,6 +141,33 @@ class buttons:
         self.button9.setCheckable(False)
         self.button9.setEnabled(True)
         self.button9.setObjectName("reconnectServer")
+        
+    def delete_entries(self):
+        self.button10 = QtWidgets.QPushButton(self.centralwidget)
+        self.button10.setGeometry(QtCore.QRect(cg.button1_x-10,cg.button1_y-40, 140, 140))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.del_entries), QtGui.QIcon.Active, QtGui.QIcon.On)
+        self.button10.setIcon(icon)
+        self.button10.setIconSize(QtCore.QSize(140, 140))
+        self.button10.setStyleSheet("border-radius : 50; border : .1px solid black")
+        self.button10.setCheckable(False)
+        self.button10.setEnabled(False)
+        self.button10.hide()
+        self.button10.setObjectName("delete_entries")
+        
+    def delete_allEntries(self):
+        self.button11 = QtWidgets.QPushButton(self.centralwidget)
+        self.button11.setGeometry(QtCore.QRect(cg.button1_x-10,cg.button1_y+100, 140, 140))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.del_all_entries), QtGui.QIcon.Active, QtGui.QIcon.On)
+        self.button11.setIcon(icon)
+        self.button11.setIconSize(QtCore.QSize(140, 140))
+        self.button11.setStyleSheet("border-radius : 50; border : .1px solid black")
+        self.button11.setCheckable(False)
+        self.button11.setEnabled(False)
+        self.button11.hide()
+        self.button11.setObjectName("delete_all_entries")    
+    
         
 
         

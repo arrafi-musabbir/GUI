@@ -71,6 +71,20 @@ class Ui_MainWindow(object):
         else:
             return False
         return self.number
+    
+    def confirmDeletation(self):
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox.setText("This action will delete the last entry\nfrom server. Do you want to proceed?")
+        msgBox.setWindowTitle("This action is irreversible!")
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+        # msgBox.buttonClicked.connect(msgButtonClick)
+        returnValue = msgBox.exec()
+        if returnValue == QtWidgets.QMessageBox.Ok:
+            print('OK clicked')
+            return True
+        else:
+            return False
             
     def action_Switch(self):
         if self.state == "Main":
@@ -140,10 +154,6 @@ class Ui_MainWindow(object):
             self.blur_effect.setEnabled(False)
             
     def loadMain(self):
-        # if self.commDev.commPort is not None:
-        #         self.grapics.ring.setEnabled(False)
-        # self.grapics.movie.stop()
-        # self.grapics.initAnim.hide()
         self.backgroundBlur("disable")
         self.grapics.indicator.hide()
         self.buttons.button1.show()
@@ -181,6 +191,10 @@ class Ui_MainWindow(object):
         self.buttons.button7.setEnabled(False)
         self.buttons.button8.show()
         self.buttons.button8.setEnabled(True)
+        self.buttons.button10.show()
+        self.buttons.button10.setEnabled(True)
+        self.buttons.button11.show()
+        self.buttons.button11.setEnabled(True)
         # self.grapics.availablePorts()
         # self.grapics.showPorts.show()
         # self.grapics.connectedport()
@@ -281,12 +295,15 @@ class Ui_MainWindow(object):
         self.loadRegistrationAgain()             
         
     def button2_click(self):  
-        self.grapics.click_to.adjustSize()
-        if self.db_state == 1:
-            if self.connectServer():
-                self.db.clearEntries(1)
+        # self.grapics.click_to.adjustSize()
+        if self.confirmDeletation():
+            if self.db_state == 1:
+                if self.connectServer():
+                    self.db.clearEntries(1)
+            else:
+                self.grapics.dbmsg.show()
         else:
-            self.grapics.dbmsg.show()
+            print("deletation cancelled")
              
     def button3_click(self):
         self.goto_settings()
