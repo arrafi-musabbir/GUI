@@ -21,6 +21,7 @@ class grapics:
         self.invalidSimWarning()
         self.duplicateSimWarning()
         # self.initAnimation()
+        # self.currentNumber()
         
     
     def backGround(self):
@@ -222,23 +223,21 @@ class grapics:
         self.dupSimmsg.setDetailedText("Can't initiate device: You have already used this sim once to initiate a device. Input a new sim number and try again")
 
             
-    def invalidNumber(self):
+    def currentNumber(self, curr):
         
-        self.invNum = QtWidgets.QLabel(self.centralwidget)
-        self.invNum.setGeometry(QtCore.QRect(cg.width//2, cg.height//1.1, 11, 41))
+        self.currNumber = QtWidgets.QLabel(self.centralwidget)
+        self.currNumber.setGeometry(QtCore.QRect(600, 775, 11, 40))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei UI")
-        font.setPointSize(28)
+        font.setPointSize(24)
         font.setBold(True)
-        font.setWeight(75)
-        name = "Invalid Number"
-        # email = "musabbir.arrafi@gmail.com"
-        self.invNum.setText(name)
-        self.invNum.setFont(font)
-        self.invNum.setStyleSheet("color:rgb(255, 255, 255)")
-        self.invNum.setScaledContents(True)
-        # self.credits.setStyleSheet("QLabel { background-color : black;color:rgb(255, 255, 255)}")
-        self.invNum.setObjectName("invNum")
-        self.invNum.setAlignment(QtCore.Qt.AlignCenter)
-        self.invNum.adjustSize()
-        self.invNum.show()
+        font.setWeight(60)
+        text = "Number of devices initiated in current session: "+ str(curr)
+        self.currNumber.setText(text)
+        self.currNumber.setFont(font)
+        self.currNumber.setStyleSheet("color:rgb(255, 255, 255)")
+        self.currNumber.setScaledContents(True)
+        self.currNumber.setObjectName("currSession")
+        self.currNumber.setAlignment(QtCore.Qt.AlignCenter)
+        self.currNumber.adjustSize()
+        self.currNumber.hide()

@@ -6,13 +6,13 @@ class commDev:
 
     def __init__(self):
         self.sc_state = 0
-        self.communication = None
+        self.communication = 0
         self.commPort = None
         self.listPorts = list()
         self.find_com_port()
 
     def communicate(self, id):
-        self.communication = None
+        self.communication = 0
         try:
             # self.auto_establish_comm()
             while self.commPort is not None:
@@ -25,10 +25,10 @@ class commDev:
                             print("sending data")
                             self.sc.write(id.encode())
                             if self.sc.readline().strip().decode() == "success":
-                                self.communication = 1
                                 print("Communication successful")
                                 print("Device registered successfully")
                                 self.sc.timeout = 3
+                                self.communication = 1
                                 # self.sc.close()
                                 break
                     # self.sc.timeout = 3
@@ -41,9 +41,9 @@ class commDev:
     def auto_establish_comm(self):
         self.find_com_port()
         if self.commPort is not None:
-            self.connectedPort = self.commPort
-            print("Communication port found: ", self.connectedPort)
+            print("Communication port found: ", self.commPort)
             try:
+                self.connectedPort = self.commPort
                 self.sc = serial.Serial(self.connectedPort, 9600)
                 self.flush_device()
                 print("Establishing communication at port: ", self.connectedPort)

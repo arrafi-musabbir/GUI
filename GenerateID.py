@@ -22,7 +22,7 @@ class genID:
         # print("random pswd", pswd)
         self.en_pswd = self.key[0] + self.enPswd(pswd).decode()
         # print(len(self.en_pswd))
-        self.id = pswd + "1103" + self.today + '0001'
+        self.id = pswd + "1103" + self.today + '0000'
         self.id = str(int(self.id) + newSerial)
         # print("New generated ID:>> ", self.id[0:4] + " " + self.id[4:8] + " "
         #       + self.id[8:12] + " " + self.id[12:14] + " " + self.id[14:16] + " " + self.id[16:])

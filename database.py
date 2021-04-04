@@ -2,6 +2,7 @@ import mysql.connector
 import time
 from datetime import datetime 
 import socket 
+import pymysql
 
 class database:
 
@@ -23,12 +24,10 @@ class database:
             self.db_state = 1
             self.mycursor = self.myDB.cursor()
             print("Server connection established successfully")
-            self.mycursor.execute("ALTER TABLE deviceid AUTO_INCREMENT=1;")
-            self.totalIDs = self.getTotalID()
+            # self.totalIDs = self.getTotalID()
         except mysql.connector.Error:
             self.db_state = 0
             print("Server connection failed")
-
         return self.db_state
 
     def addNew(self, ID, sim, PSWD, DateTime):
@@ -37,7 +36,7 @@ class database:
                 "INSERT INTO deviceid(ID, Sim, password, CreatedOn) VALUES(%s, %s, %s, %s)", (ID, sim, PSWD, DateTime))
             self.myDB.commit()
             time.sleep(1)
-            print("added successfully")
+            print("added to database successfully")
             return True
         except mysql.connector.errors.IntegrityError:
             return False
@@ -71,12 +70,16 @@ class database:
 
     def getTotalID(self):
         try:
-            self.mycursor.execute(
-                "SELECT Serial FROM deviceid ORDER BY CreatedOn DESC LIMIT 1")
-            for i in self.mycursor:
-                return i[0]
+            # self.mycursor.execute(
+            #     "SELECT Serial FROM deviceid ORDER BY CreatedOn DESC LIMIT 1")
+            self.mycursor.execute("SELECT * FROM deviceid")
+            num_rows = self.mycursor.fetchall()
+            return len(num_rows)
+
         except:
             print("database connection failed")
+            return False
+
 
     def checkInternetSocket(self, host="8.8.8.8", port=53, timeout=3):
         try:
@@ -92,6 +95,8 @@ class database:
 if __name__ == "__main__":
     print("IN DATABASE")
     a = database()
+    a.connectDB()
+    print(a.getTotalID())
     # a.connectDB()
     # a.describeTable()
     # print(a.db_state)
