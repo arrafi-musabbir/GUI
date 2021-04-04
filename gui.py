@@ -15,6 +15,21 @@ from QR_Generator import qrGen
 class Ui_MainWindow(object):
     
     def setupUi(self, MainWindow):
+        
+        MainWindow.setObjectName("MainWindow")
+        
+        MainWindow.setGeometry(cg.window_x, cg.window_y, cg.width, cg.height)
+        MainWindow.setEnabled(True)
+        
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        
+        self.error_dialog = QtWidgets.QErrorMessage()
+        
+        MainWindow.setCentralWidget(self.centralwidget)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        
+        
         self.db = database()
         self.db_state = self.db.db_state
         self.total_ids = self.db.totalIDs
@@ -27,16 +42,6 @@ class Ui_MainWindow(object):
         self.state = "Main"
         self.db_stored = 0
         
-        MainWindow.setObjectName("MainWindow")
-        
-        MainWindow.setGeometry(cg.window_x, cg.window_y, cg.width, cg.height)
-        MainWindow.setEnabled(True)
-        
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        
-        self.error_dialog = QtWidgets.QErrorMessage()
-        
         self.grapics = grapics(self.centralwidget,self.cwd,self.commDev)
         self.buttons = buttons(self.centralwidget,self.cwd)
         
@@ -46,10 +51,6 @@ class Ui_MainWindow(object):
         
         self.actionSwitch = QtWidgets.QShortcut(QtGui.QKeySequence('Space'),MainWindow)
         self.actionSwitch.activated.connect(self.action_Switch)
-            
-            
-        MainWindow.setCentralWidget(self.centralwidget)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
         self.buttons.button1.clicked.connect(self.init_device)
         self.buttons.button2.clicked.connect(self.button2_click)
@@ -57,10 +58,23 @@ class Ui_MainWindow(object):
         self.buttons.button4.clicked.connect(self.button4_click)
         self.buttons.button5.clicked.connect(self.button5_click)
         self.buttons.button6.clicked.connect(self.button6_click)
-        # self.buttons.button8.clicked.connect(self.button8_click)
         self.buttons.button9.clicked.connect(self.connectServer)
         self.buttons.button10.clicked.connect(self.deleteXentries)
         self.buttons.button11.clicked.connect(self.deleteAllentries)
+        # self.loadAnimation()
+        # self.movie.start()
+        # self.movie.stop()
+
+    def loadAnimation(self):
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(25, 25, 200, 200))
+        self.label.setMinimumSize(QtCore.QSize(250, 250))
+        self.label.setMaximumSize(QtCore.QSize(250, 250))
+        self.label.setObjectName("lb1")
+        # Loading the GIF
+        self.movie = QtGui.QMovie("Radio.gif")
+        self.label.setMovie(self.movie)
+        self.label.show()
 
     def takeinputs(self):
         Number, ok = QtWidgets.QInputDialog.getText(
