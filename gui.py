@@ -23,9 +23,7 @@ class Ui_MainWindow(object):
         
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        
-        self.error_dialog = QtWidgets.QErrorMessage()
-        
+        # self.error_dialog = QtWidgets.QErrorMessage()
         MainWindow.setCentralWidget(self.centralwidget)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
@@ -209,7 +207,7 @@ class Ui_MainWindow(object):
         self.grapics.click_to.adjustSize()
         self.state = "Main"
     
-    def gotoCommPorts(self):
+    def loadDBsettings(self):
         self.state = "dbSettings"
         # self.actionSwitch.activated.connect(self.action_Switch)
         self.buttons.button4.show()
@@ -354,7 +352,7 @@ class Ui_MainWindow(object):
             self.loadMain()
     
     def button6_click(self):
-        self.gotoCommPorts()
+        self.loadDBsettings()
 
     def button5_click(self):
         self.state = "credits"
@@ -369,19 +367,6 @@ class Ui_MainWindow(object):
         self.grapics.showCredits()
         self.grapics.credits.show()
     
-    def button8_click(self):
-        # self.offline()
-        # self.commDev.change_comPort()
-        # self.grapics.click_to.setText("CLICK SPACE TO SWITCH PORTS")
-        # self.grapics.click_to.show()
-        # self.grapics.click_to.adjustSize()
-        # self.grapics.selectedPort.setText("CONNECTED PORT:"+str(self.commDev.connectedPort).upper())
-        # self.grapics.showPorts.setText("AVAILABLE PORTS:\n"+str(self.commDev.find_com_port()).upper())
-        # self.grapics.selectedPort.adjustSize()
-        # self.grapics.showPorts.adjustSize()
-        # if self.commDev.connectedPort is None:
-        #     self.grapics.ring.setEnabled(False)
-        pass
     
     def takeXentries(self):
         Number, ok = QtWidgets.QInputDialog.getText(
