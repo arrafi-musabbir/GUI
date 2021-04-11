@@ -118,8 +118,6 @@ class Ui_MainWindow(object):
     def action_Switch(self):
         if self.state == "Main":
             self.init_device()
-        elif self.state == "showCommPorts":
-            self.button8_click()
         elif self.state == "initiate":
             self.init_device()
         
