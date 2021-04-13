@@ -3,57 +3,74 @@ import time
 from datetime import datetime 
 import socket 
 import pymysql
+from random import randint
 
 class database:
 
     def __init__(self):
+        self.host="bqgm0itmhmekra8ftfqb-mysql.services.clever-cloud.com" #"localhost"
+        self.port = "3306"
+        self.user="ui3kv2obppaytcrg" #"root"
+        self.password="1G4NcaXyBPpAWuGrx5Mg" #"#456"
+        self.database="bqgm0itmhmekra8ftfqb" #"deviceinfo"
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
         self.internetConnectivity = self.checkInternetSocket()
-        # self.connectDB()
-        
 
+        
+    # establish connection to database
     def connectDB(self):
         try:
             self.myDB = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="#456",
-                database="deviceinfo")
+                host = self.host,
+                port = self.port,
+                user = self.user,
+                password = self.password,
+                database = self.database)
             self.db_state = 1
             self.mycursor = self.myDB.cursor()
             print("Server connection established successfully")
-            # self.totalIDs = self.getTotalID()
         except mysql.connector.Error:
             self.db_state = 0
             print("Server connection failed")
         return self.db_state
 
-    def addNew(self, ID, sim, PSWD, DateTime):
+    
+    # add new entries
+    def addNew(self, tableName, MAC_Address, check_IN, check_OUT):
         try:
             self.mycursor.execute(
-                "INSERT INTO deviceid(ID, Sim, password, CreatedOn) VALUES(%s, %s, %s, %s)", (ID, sim, PSWD, DateTime))
+                "INSERT INTO {}(MAC_Address, check_IN, check_OUT) VALUES(%s, %s, %s)".format(tableName), (MAC_Address, check_IN, check_OUT))
             self.myDB.commit()
             time.sleep(1)
             print("added to database successfully")
             return True
         except mysql.connector.errors.IntegrityError:
+            print("Unique value violated")
             return False
 
-    def describeTable(self):
-        self.mycursor.execute("DESCRIBE deviceid")
+
+    # describe the table
+    def describeTable(self, tableName):
+        self.mycursor.execute("DESCRIBE {}".format(tableName))
         for x in self.mycursor:
             print(x)
 
+
+    # terminate connection with database
     def disconnect(self):
         self.myDB.disconnect()
 
-    def clearTable(self):
-        self.mycursor.execute("TRUNCATE TABLE deviceid")
+
+    # clear said table
+    def clearTable(self, tableName):
+        self.mycursor.execute("TRUNCATE TABLE {}".format(tableName))
         self.myDB.commit()
         print("The table has been cleared")
 
+
+    # clear n number of entries from said table
     def clearEntries(self, n):
         if self.myDB:
             try:
@@ -68,6 +85,7 @@ class database:
         else:
             print("database didn't respond")
 
+    # get total number of entries/ID
     def getTotalID(self):
         try:
             # self.mycursor.execute(
@@ -80,7 +98,7 @@ class database:
             print("database connection failed")
             return False
 
-
+    # check if a stable internet connection is available
     def checkInternetSocket(self, host="8.8.8.8", port=53, timeout=3):
         try:
             socket.setdefaulttimeout(timeout)
@@ -96,13 +114,6 @@ if __name__ == "__main__":
     print("IN DATABASE")
     a = database()
     a.connectDB()
-    print(a.getTotalID())
-    # a.connectDB()
-    # a.describeTable()
-    # print(a.db_state)
-    # a.addNew( "33" , "18722", "tihan", datetime.now())
-    # time.sleep(1)
-    # print(a.getTotalID())
-    # a.clearTable()
-    # a.clearEntries(1)
-    # a.disconnect()
+    a.describeTable("CHECK_IN_OUT_records")
+    a.addNew("CHECK_IN_OUT_records", randint(1, 100), randint(101, 200), randint(201, 300),)
+    a.disconnect()
