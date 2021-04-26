@@ -2,7 +2,7 @@ import mysql.connector
 import time
 from datetime import datetime 
 import socket 
-import pymysql
+#import pymysql
 from random import randint
 
 class database:
