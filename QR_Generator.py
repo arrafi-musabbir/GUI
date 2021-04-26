@@ -43,4 +43,4 @@ class qrGen:
 
 if __name__ == "__main__":
     a = qrGen()
-    a.genQR(123456, 918274559)
+    a.genQR(123456, "test")
