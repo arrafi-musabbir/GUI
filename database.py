@@ -123,5 +123,5 @@ if __name__ == "__main__":
     a = database()
     a.connectDB()
     a.describeTable()
-    # a.clearTable()
+    a.clearTable()
     a.disconnect()
