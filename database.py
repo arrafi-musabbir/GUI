@@ -1,47 +1,49 @@
 import mysql.connector
 import time
-from datetime import datetime 
-import socket 
+from datetime import datetime
+import socket
 #import pymysql
 from random import randint
+import sshtunnel
 
 class database:
 
     def __init__(self):
-        self.host="bqgm0itmhmekra8ftfqb-mysql.services.clever-cloud.com" #"localhost"
+        self.host = "103.123.8.52"
         self.port = "3306"
-        self.user="ui3kv2obppaytcrg" #"root"
-        self.password="1G4NcaXyBPpAWuGrx5Mg" #"#456"
-        self.database="bqgm0itmhmekra8ftfqb" #"deviceinfo"
+        self.user = "root"
+        self.password = "#456"
+        self.database = "deviceinfo"
+        self.table_name = "deviceid"
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
         self.internetConnectivity = self.checkInternetSocket()
 
-        
     # establish connection to database
+
     def connectDB(self):
         try:
             self.myDB = mysql.connector.connect(
-                host = self.host,
-                port = self.port,
-                user = self.user,
+                host = "localhost",
+                port = "3306",
+                user = "root",
                 password = self.password,
                 database = self.database)
             self.db_state = 1
             self.mycursor = self.myDB.cursor()
             print("Server connection established successfully")
-        except mysql.connector.Error:
+        except AttributeError:
             self.db_state = 0
             print("Server connection failed")
         return self.db_state
 
-    
     # add new entries
-    def addNew(self, tableName, MAC_Address, check_IN, check_OUT):
+
+    def addNew(self, Sim, ID, Password, CreatedOn):
         try:
             self.mycursor.execute(
-                "INSERT INTO {}(MAC_Address, check_IN, check_OUT) VALUES(%s, %s, %s)".format(tableName), (MAC_Address, check_IN, check_OUT))
+                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.tableName), (Sim, ID, Password, CreatedOn))
             self.myDB.commit()
             time.sleep(1)
             print("added to database successfully")
@@ -50,27 +52,27 @@ class database:
             print("Unique value violated")
             return False
 
-
     # describe the table
-    def describeTable(self, tableName):
-        self.mycursor.execute("DESCRIBE {}".format(tableName))
+
+    def describeTable(self):
+        self.mycursor.execute("DESCRIBE {}".format(self.tableName))
         for x in self.mycursor:
             print(x)
 
-
     # terminate connection with database
+
     def disconnect(self):
         self.myDB.disconnect()
 
-
     # clear said table
+
     def clearTable(self, tableName):
         self.mycursor.execute("TRUNCATE TABLE {}".format(tableName))
         self.myDB.commit()
         print("The table has been cleared")
 
-
     # clear n number of entries from said table
+
     def clearEntries(self, n):
         if self.myDB:
             try:
@@ -78,7 +80,7 @@ class database:
                     self.mycursor.execute(
                         "DELETE FROM deviceid ORDER BY CreatedOn DESC LIMIT 1")
                 self.myDB.commit()
-                print(n,"number of entries deletation succcessfull")
+                print(n, "number of entries deletation succcessfull")
             except AttributeError:
                 print("Not connected to Database")
                 pass
@@ -102,18 +104,21 @@ class database:
     def checkInternetSocket(self, host="8.8.8.8", port=53, timeout=3):
         try:
             socket.setdefaulttimeout(timeout)
-            socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(
+                (host, port))
             print("stable internet connection")
             return True
         except socket.error:
             # print(ex)
             print("unstable internet connection restored")
             return False
-    
+
+
 if __name__ == "__main__":
     print("IN DATABASE")
     a = database()
     a.connectDB()
-    a.describeTable("CHECK_IN_OUT_records")
-    a.addNew("CHECK_IN_OUT_records", randint(1, 100), randint(101, 200), randint(201, 300),)
+    a.describeTable()
+    a.addNew("CHECK_IN_OUT_records", randint(1, 100),
+             randint(101, 200), randint(201, 300),)
     a.disconnect()
