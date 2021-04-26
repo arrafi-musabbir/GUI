@@ -33,7 +33,7 @@ class database:
             self.db_state = 1
             self.mycursor = self.myDB.cursor()
             print("Server connection established successfully")
-        except AttributeError:
+        except mysql.connector.errors.InterfaceError: 
             self.db_state = 0
             print("Server connection failed")
         return self.db_state
@@ -55,14 +55,18 @@ class database:
     # describe the table
 
     def describeTable(self):
-        self.mycursor.execute("DESCRIBE deviceid")
-        for x in self.mycursor:
-            print(x)
+        if self.db_state == 1:
+            self.mycursor.execute("DESCRIBE deviceid")
+            for x in self.mycursor:
+                print(x)
+        else:
+            print("Database not connected")
 
     # terminate connection with database
 
     def disconnect(self):
-        self.myDB.disconnect()
+        if self.db_state == 1:
+            self.myDB.disconnect()
 
     # clear said table
 
@@ -119,5 +123,5 @@ if __name__ == "__main__":
     a = database()
     a.connectDB()
     a.describeTable()
-    a.clearTable()
+    # a.clearTable()
     a.disconnect()
