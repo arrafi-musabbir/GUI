@@ -6,11 +6,6 @@ import img2pdf
 class qrGen:
     
     def __init__(self):
-        try:
-            os.mkdir(os.path.join(os.getcwd(),"QRs"))
-        except FileExistsError:
-            print("directory already exists")
-            pass
         self.qrs_folder_path = os.path.join(os.getcwd(),"QRs")
     
     def genQR(self,id,sim):
