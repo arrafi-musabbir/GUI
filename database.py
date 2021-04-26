@@ -6,6 +6,7 @@ import socket
 from random import randint
 import sshtunnel
 
+
 class database:
 
     def __init__(self):
@@ -25,15 +26,15 @@ class database:
     def connectDB(self):
         try:
             self.myDB = mysql.connector.connect(
-                host = "localhost",
-                port = "3306",
-                user = "root",
-                password = "#456",
-                database = self.database)
+                host="localhost",
+                port="3306",
+                user="root",
+                password="#456",
+                database=self.database)
             self.db_state = 1
             self.mycursor = self.myDB.cursor()
             print("Server connection established successfully")
-        except mysql.connector.errors.InterfaceError: 
+        except mysql.connector.errors.InterfaceError:
             self.db_state = 0
             print("Server connection failed")
         return self.db_state

@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-import config as cg 
+import config as cg
 import sys
 import os
 from Buttons import buttons
@@ -13,21 +13,20 @@ from QR_Generator import qrGen
 
 
 class Ui_MainWindow(object):
-    
+
     def setupUi(self, MainWindow):
-        
+
         MainWindow.setObjectName("MainWindow")
-        
+
         MainWindow.setGeometry(cg.window_x, cg.window_y, cg.width, cg.height)
         MainWindow.setEnabled(True)
-        
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         # self.error_dialog = QtWidgets.QErrorMessage()
         MainWindow.setCentralWidget(self.centralwidget)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
-        
+
         self.db = database()
         self.db_state = self.db.db_state
         self.total_ids = self.db.totalIDs
@@ -39,17 +38,19 @@ class Ui_MainWindow(object):
         self.number = "0"
         self.state = "Main"
         self.db_stored = 0
-        
-        self.grapics = grapics(self.centralwidget,self.cwd,self.commDev)
-        self.buttons = buttons(self.centralwidget,self.cwd)
-        
+
+        self.grapics = grapics(self.centralwidget, self.cwd, self.commDev)
+        self.buttons = buttons(self.centralwidget, self.cwd)
+
         self.connectServer()
-        self.actionExit = QtWidgets.QShortcut(QtGui.QKeySequence('Esc'),MainWindow)
+        self.actionExit = QtWidgets.QShortcut(
+            QtGui.QKeySequence('Esc'), MainWindow)
         self.actionExit.activated.connect(self.action_Exit)
-        
-        self.actionSwitch = QtWidgets.QShortcut(QtGui.QKeySequence('Space'),MainWindow)
+
+        self.actionSwitch = QtWidgets.QShortcut(
+            QtGui.QKeySequence('Space'), MainWindow)
         self.actionSwitch.activated.connect(self.action_Switch)
-        
+
         self.buttons.button1.clicked.connect(self.init_device)
         self.buttons.button2.clicked.connect(self.button2_click)
         self.buttons.button3.clicked.connect(self.button3_click)
@@ -76,7 +77,7 @@ class Ui_MainWindow(object):
 
     def takeinputs(self):
         Number, ok = QtWidgets.QInputDialog.getText(
-             self.centralwidget , 'SIM NUMBER', 'Enter Sim Number:')
+            self.centralwidget, 'SIM NUMBER', 'Enter Sim Number:')
         if ok:
             try:
                 print(Number)
@@ -86,13 +87,15 @@ class Ui_MainWindow(object):
         else:
             return False
         return self.number
-    
+
     def confirmDeletation(self):
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Information)
-        msgBox.setText("This action is irreversible!\nDo you still want to proceed?")
+        msgBox.setText(
+            "This action is irreversible!\nDo you still want to proceed?")
         msgBox.setWindowTitle("Cleanup protocol")
-        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+        msgBox.setStandardButtons(
+            QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
         # msgBox.buttonClicked.connect(msgButtonClick)
         returnValue = msgBox.exec()
         if returnValue == QtWidgets.QMessageBox.Ok:
@@ -100,13 +103,15 @@ class Ui_MainWindow(object):
             return True
         else:
             return False
-    
+
     def confirmAllDeletation(self):
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Information)
-        msgBox.setText("This action will cleanup all the entries from the current session\nand is irreversible! Do you still want to proceed?")
+        msgBox.setText(
+            "This action will cleanup all the entries from the current session\nand is irreversible! Do you still want to proceed?")
         msgBox.setWindowTitle("Cleanup protocol")
-        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+        msgBox.setStandardButtons(
+            QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
         # msgBox.buttonClicked.connect(msgButtonClick)
         returnValue = msgBox.exec()
         if returnValue == QtWidgets.QMessageBox.Ok:
@@ -114,13 +119,13 @@ class Ui_MainWindow(object):
             return True
         else:
             return False
-    
+
     def action_Switch(self):
         if self.state == "Main":
             self.init_device()
         elif self.state == "initiate":
             self.init_device()
-        
+
     def action_Exit(self):
         if self.state == "Settings":
             self.loadMain()
@@ -139,7 +144,7 @@ class Ui_MainWindow(object):
             time.sleep(1)
             # print("...")
             sys.exit()
-        
+
     def goto_settings(self):
         if self.state == "Main":
             self.actionSwitch.disconnect()
@@ -171,14 +176,14 @@ class Ui_MainWindow(object):
         self.buttons.button7.show()
         self.buttons.button7.setEnabled(True)
         self.state = "Settings"
-    
+
     def backgroundBlur(self, able):
         if able == "enable":
-            self.blur_effect = QtWidgets.QGraphicsBlurEffect() 
+            self.blur_effect = QtWidgets.QGraphicsBlurEffect()
             self.grapics.background.setGraphicsEffect(self.blur_effect)
         else:
             self.blur_effect.setEnabled(False)
-            
+
     def loadMain(self):
         self.commDev.communication = 0
         self.backgroundBlur("disable")
@@ -204,7 +209,7 @@ class Ui_MainWindow(object):
         self.grapics.click_to.setText("CLICK SPACE TO INITIATE")
         self.grapics.click_to.adjustSize()
         self.state = "Main"
-    
+
     def loadDBsettings(self):
         self.state = "dbSettings"
         # self.actionSwitch.activated.connect(self.action_Switch)
@@ -278,21 +283,22 @@ class Ui_MainWindow(object):
                         if self.commDev.connectedPort is not None:
                             if self.commDev.sc_state == 1:
                                 try:
-                                    nextID = self.db.getTotalID() + 1    
+                                    nextID = self.db.getTotalID() + 1
                                 except:
                                     self.grapics.dbmsg.show()
                                     print("database didn't respond")
                                     # self.loadMain()
                                     break
                                 id_pass = self.genID.newID(nextID)
-                                Id,pswd = id_pass[0],id_pass[1]
-                                print("sending id",Id[4:])
+                                Id, pswd = id_pass[0], id_pass[1]
+                                print("sending id", Id[4:])
                                 self.commDev.communicate(Id)
                                 time.sleep(1)
                                 if self.db.addNew(self.number, Id[4:], pswd, datetime.now()):
-                                    self.qr.genQR(Id[4:],self.number)
+                                    self.qr.genQR(Id[4:], self.number)
                                     self.db_stored += 1
-                                    print("Initiated in this session", self.db_stored)
+                                    print("Initiated in this session",
+                                          self.db_stored)
                                     self.commDev.communication = 1
                                 else:
                                     print("Duplicate mobile number")
@@ -307,7 +313,7 @@ class Ui_MainWindow(object):
                             self.grapics.noCommmsg.show()
                         if self.commDev.communication == 1:
                             self.online()
-                            
+
                         # self.loadMain()
                         break
                     else:
@@ -320,12 +326,12 @@ class Ui_MainWindow(object):
                     self.grapics.invSimmsg.show()
                     # self.loadMain()
                     break
-            else:    
-                break 
+            else:
+                break
         self.actionSwitch.disconnect()
-        self.loadRegistrationAgain()             
-        
-    def button2_click(self):  
+        self.loadRegistrationAgain()
+
+    def button2_click(self):
         # self.grapics.click_to.adjustSize()
         if self.confirmDeletation():
             if self.db_state == 1:
@@ -335,10 +341,10 @@ class Ui_MainWindow(object):
                 self.grapics.dbmsg.show()
         else:
             print("deletation cancelled")
-             
+
     def button3_click(self):
         self.goto_settings()
-    
+
     def button4_click(self):
         if self.state == "Settings":
             self.loadMain()
@@ -348,7 +354,7 @@ class Ui_MainWindow(object):
             self.goto_settings()
         elif self.state == "initiate":
             self.loadMain()
-    
+
     def button6_click(self):
         self.loadDBsettings()
 
@@ -364,11 +370,10 @@ class Ui_MainWindow(object):
         self.buttons.button7.setEnabled(False)
         self.grapics.showCredits()
         self.grapics.credits.show()
-    
-    
+
     def takeXentries(self):
         Number, ok = QtWidgets.QInputDialog.getText(
-             self.centralwidget , 'Clear Records', 'How many entries you want to delete?')
+            self.centralwidget, 'Clear Records', 'How many entries you want to delete?')
         if ok:
             try:
                 # print(Number)
@@ -378,69 +383,76 @@ class Ui_MainWindow(object):
         else:
             return False
         return self.Xnumber
-    
+
     def deleteXentries(self):
         if self.takeXentries():
             if self.confirmDeletation():
                 self.db.clearEntries(int(self.Xnumber))
-                
+
     def deleteAllentries(self):
         if self.confirmAllDeletation():
             self.db.clearEntries(self.db_stored)
 
     def online(self):
         # time.sleep(1)
-        self.grapics.status.setText("<font color=\"white\">NEW DEVICE INITIATED</font>")
+        self.grapics.status.setText(
+            "<font color=\"white\">NEW DEVICE INITIATED</font>")
         self.grapics.status.show()
-        self.grapics.status.adjustSize() 
+        self.grapics.status.adjustSize()
         self.grapics.ring.setEnabled(True)
         # self.grapics.click_to.setText("CLICK SPACE TO CONNECT")
         # self.grapics.click_to.adjustSize()
-        self.grapics.indicator.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.green_indicator))
-        
+        self.grapics.indicator.setPixmap(
+            QtGui.QPixmap(self.cwd + "/" + cg.green_indicator))
+
     def offline(self):
         self.commDev.communication = 0
         self.grapics.ring.setEnabled(False)
         # self.grapics.status.setText("STATUS  <font color=\"red\"> OFF </font> ")
-        # self.grapics.status.adjustSize() 
+        # self.grapics.status.adjustSize()
         self.grapics.click_to.setText("CLICK SPACE TO INITIATE")
-        self.grapics.indicator.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.red_indicator))
-        
+        self.grapics.indicator.setPixmap(
+            QtGui.QPixmap(self.cwd + "/" + cg.red_indicator))
+
     def connectServer(self):
         print("trying to reconnect server")
         if self.db.checkInternetSocket():
-            self.grapics.netConnection.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.stable_internet))
+            self.grapics.netConnection.setPixmap(
+                QtGui.QPixmap(self.cwd + "/" + cg.stable_internet))
             if self.db.connectDB():
                 self.db_state = 1
                 icon = QtGui.QIcon()
-                icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.serverOnline), QtGui.QIcon.Active, QtGui.QIcon.On)
+                icon.addPixmap(QtGui.QPixmap(
+                    self.cwd + "/" + cg.serverOnline), QtGui.QIcon.Active, QtGui.QIcon.On)
                 self.buttons.button9.setIcon(icon)
                 return True
             else:
                 self.grapics.dbmsg.show()
                 self.db_state = 0
                 icon = QtGui.QIcon()
-                icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
+                icon.addPixmap(QtGui.QPixmap(
+                    self.cwd + "/" + cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
                 self.buttons.button9.setIcon(icon)
                 return False
         else:
-            self.grapics.netConnection.setPixmap(QtGui.QPixmap(self.cwd+"/"+cg.no_internet))
+            self.grapics.netConnection.setPixmap(
+                QtGui.QPixmap(self.cwd + "/" + cg.no_internet))
             icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(self.cwd+"/"+cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
+            icon.addPixmap(QtGui.QPixmap(
+                self.cwd + "/" + cg.reconnectServer), QtGui.QIcon.Active, QtGui.QIcon.On)
             self.buttons.button9.setIcon(icon)
             self.grapics.noInternetmsg.show()
             return False
-            
-            
-        
+
+
 if __name__ == "__main__":
-    
+
     app = QtWidgets.QApplication(sys.argv)
     screen = app.primaryScreen()
-    
+
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    
+
     MainWindow.showNormal()
     sys.exit(app.exec_())

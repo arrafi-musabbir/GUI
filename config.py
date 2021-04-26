@@ -33,10 +33,10 @@ button6_width, button6_height = 90, 90
 button8_width, button8_height = 58, 58
 
 
-button9_x,button9_y = 1250, 20
+button9_x, button9_y = 1250, 20
 button9_height, button9_width = 45, 45
 
-button10_x,button10_y = 620, 300
+button10_x, button10_y = 620, 300
 button10_height, button10_width = 140, 140
 
 indicator_x, indicator_y = 60, 60

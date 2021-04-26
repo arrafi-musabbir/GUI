@@ -26,7 +26,7 @@ class genID:
         self.id = str(int(self.id) + newSerial)
         # print("New generated ID:>> ", self.id[0:4] + " " + self.id[4:8] + " "
         #       + self.id[8:12] + " " + self.id[12:14] + " " + self.id[14:16] + " " + self.id[16:])
-        return self.id,self.en_pswd
+        return self.id, self.en_pswd
 
     def randomKey(self):
         return random.choice(self.keysList)
@@ -51,4 +51,3 @@ class genID:
 if __name__ == "__main__":
     a = genID()
     # print(a.newID(1)[0])
-    

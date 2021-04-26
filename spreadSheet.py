@@ -2,20 +2,21 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 import gspread
 
+
 class spreadSheet:
-    
+
     def __init__(self):
         self.connectSheet()
-        
+
     def connectSheet(self):
         scope = ['https://www.googleapis.com/auth/spreadsheets',
-                'https://www.googleapis.com/auth/drive']
+                 'https://www.googleapis.com/auth/drive']
         creds = ServiceAccountCredentials.from_json_keyfile_name(
-                filename=os.path.join(os.getcwd(), "creds.json"), scopes=scope)
+            filename=os.path.join(os.getcwd(), "creds.json"), scopes=scope)
         client = gspread.authorize(creds)
         self.sheet = client.open("DEVICE ID").sheet1
         print("connection extablished")
-        return None    
+        return None
 
     def del_lastID(self):
         self.get_totalIDs()
@@ -54,6 +55,7 @@ class spreadSheet:
                 "C" + str(self.total_ids + 2), self.en_pswd.decode())
             self.sheet.update_acell("A2", self.total_ids + 1)
             self.total_ids = self.total_ids + 1
+
 
 if __name__ == "__main__":
     a = spreadSheet()
