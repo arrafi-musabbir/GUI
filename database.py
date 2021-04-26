@@ -9,10 +9,10 @@ import sshtunnel
 class database:
 
     def __init__(self):
-        self.host = "103.123.8.52"
-        self.port = "3306"
-        self.user = "root"
-        self.password = "#456"
+        # self.host = "103.123.8.52"
+        # self.port = "3306"
+        # self.user = "root"
+        # self.password = "#456"
         self.database = "deviceinfo"
         self.table_name = "deviceid"
         self.db_state = 0
@@ -28,7 +28,7 @@ class database:
                 host = "localhost",
                 port = "3306",
                 user = "root",
-                password = self.password,
+                password = "#456",
                 database = self.database)
             self.db_state = 1
             self.mycursor = self.myDB.cursor()
@@ -43,7 +43,7 @@ class database:
     def addNew(self, Sim, ID, Password, CreatedOn):
         try:
             self.mycursor.execute(
-                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.tableName), (Sim, ID, Password, CreatedOn))
+                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), (Sim, ID, Password, CreatedOn))
             self.myDB.commit()
             time.sleep(1)
             print("added to database successfully")
@@ -55,7 +55,7 @@ class database:
     # describe the table
 
     def describeTable(self):
-        self.mycursor.execute("DESCRIBE {}".format(self.tableName))
+        self.mycursor.execute("DESCRIBE deviceid")
         for x in self.mycursor:
             print(x)
 
@@ -66,8 +66,8 @@ class database:
 
     # clear said table
 
-    def clearTable(self, tableName):
-        self.mycursor.execute("TRUNCATE TABLE {}".format(tableName))
+    def clearTable(self):
+        self.mycursor.execute("TRUNCATE TABLE {}".format(self.table_name))
         self.myDB.commit()
         print("The table has been cleared")
 
@@ -119,6 +119,5 @@ if __name__ == "__main__":
     a = database()
     a.connectDB()
     a.describeTable()
-    a.addNew("CHECK_IN_OUT_records", randint(1, 100),
-             randint(101, 200), randint(201, 300),)
+    a.clearTable()
     a.disconnect()
