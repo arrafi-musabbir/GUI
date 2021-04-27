@@ -18,7 +18,6 @@ class qrGen:
         )
         qr.add_data('Device ID: ' + str(id) + '\n' + "Sim number: " + str(sim))
         qr.make(fit=True)
-
         img = qr.make_image(fill_color="black", back_color="white")
         # img.show()
         self.qr_path = os.path.join(self.qrs_folder_path, (str(sim) + ".png"))
