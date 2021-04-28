@@ -2,7 +2,7 @@ from cryptography.fernet import Fernet
 import random
 from datetime import datetime
 import os
-
+from config import key
 
 class genID:
 
@@ -49,5 +49,32 @@ class genID:
 
 
 if __name__ == "__main__":
-    a = genID()
+    import yaml
+    s = dict()
+    print(key)
+    a = Fernet(key)
+    with open('creds.yml', 'r') as f:
+        y = yaml.safe_load(f)
+        for i in y:
+            # print(y[i])
+            try:
+                s[i] = a.decrypt(y[i].encode()).decode()
+                # print(i)
+            except cryptography.fernet.InvalidToken:
+                pass
+    # print(type(s['DB_HOST']))
+    # print(s)
+    for i in s:
+            # print(i)
+            s[i] = a.encrypt(str(s[i]).encode()).decode()
+            print(s[i])
+    # with open('creds.yml', 'w') as f:
+    #     for i in s:
+    #         print(i)
+    #         s[i] = a.encrypt(str(s[i]).encode()).decode()
+    #         print(s[i])
+    #     s['key'] = key.decode()
+    #     yaml.dump(s, f)
+        
+        
     # print(a.newID(1)[0])

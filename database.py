@@ -1,46 +1,59 @@
 import mysql.connector
+from sshtunnel import SSHTunnelForwarder
 import time
 from datetime import datetime
 import socket
-#import pymysql
 from random import randint
 import sshtunnel
-
+from config import key
+import yaml
+from cryptography.fernet import Fernet
 
 class database:
 
     def __init__(self):
-        # self.host = "103.123.8.52"
-        # self.port = "3306"
-        # self.user = "root"
-        # self.password = "#456"
-        self.database = "deviceinfo"
-        self.table_name = "deviceid"
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
         self.internetConnectivity = self.checkInternetSocket()
 
     # establish connection to database
-
     def connectDB(self):
+        global serverINFO 
+        serverINFO = dict()
+        def decryptServerINFO():
+            with open('creds.yml', 'r') as file:
+                serverINFO = yaml.safe_load(file)
+                a = Fernet(key.encode())
+                for i in serverINFO:
+                    serverINFO[i] = a.decrypt(serverINFO[i].encode()).decode()
         try:
+            decryptServerINFO()
+            self.tunnel = SSHTunnelForwarder((serverINFO['SSH_HOST'], serverINFO['SSH_PORT']), 
+                                        ssh_password=serverINFO['SSH_PSWD'], 
+                                        ssh_username=serverINFO['SSH_UNAME'], 
+                                        remote_bind_address=(serverINFO['DB_HOST'], serverINFO['DB_PORT'])) 
+            self.tunnel.start()
             self.myDB = mysql.connector.connect(
-                host="localhost",
-                port="3306",
-                user="root",
-                password="#456",
-                database=self.database)
+                host=serverINFO['DB_HOST'],
+                port=self.tunnel.local_bind_port,
+                user=serverINFO['DB_UNAME'],
+                password=serverINFO['DB_PSWD'],
+                database=serverINFO['DB_NAME'])
             self.db_state = 1
             self.mycursor = self.myDB.cursor()
             print("Server connection established successfully")
         except mysql.connector.errors.InterfaceError:
             self.db_state = 0
             print("Server connection failed")
+        # print(self.serverINFO)
         return self.db_state
-
+    
+    
+        
+        
     # add new entries
-
+    
     def addNew(self, Sim, ID, Password, CreatedOn):
         try:
             self.mycursor.execute(
@@ -57,7 +70,7 @@ class database:
 
     def describeTable(self):
         if self.db_state == 1:
-            self.mycursor.execute("DESCRIBE deviceid")
+            self.mycursor.execute("DESCRIBE {}".format(TABLE_NAME))
             for x in self.mycursor:
                 print(x)
         else:
@@ -68,6 +81,8 @@ class database:
     def disconnect(self):
         if self.db_state == 1:
             self.myDB.disconnect()
+            self.tunnel.close()
+            print("server disconnection protocol successful")
 
     # clear said table
 
@@ -124,5 +139,5 @@ if __name__ == "__main__":
     a = database()
     a.connectDB()
     a.describeTable()
-    a.clearTable()
+    # a.clearTable()
     a.disconnect()

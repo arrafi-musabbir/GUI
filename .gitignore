@@ -10,3 +10,5 @@ run.exe
 __pycache__
 python.exe - Shortcut.lnk
 \*.json
+creds.yml
+creds.json
