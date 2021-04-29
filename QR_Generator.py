@@ -1,13 +1,19 @@
 import qrcode
 import os
-from PIL import Image
-import img2pdf
+import image
+# from PIL import Image
+# import img2pdf
 
 
 class qrGen:
 
     def __init__(self):
         self.qrs_folder_path = os.path.join(os.getcwd(), "QRs")
+        try:
+            os.mkdir(self.qrs_folder_path)
+        except FileExistsError:
+            pass
+        
 
     def genQR(self, id, sim):
         qr = qrcode.QRCode(
@@ -22,12 +28,6 @@ class qrGen:
         # img.show()
         self.qr_path = os.path.join(self.qrs_folder_path, (str(sim) + ".png"))
         img.save(self.qr_path)
-        # image = Image.open(self.qr_path)
-        # pdf_bytes = img2pdf.convert(image.filename)
-        # file = open(self.qr_path, "wb")
-        # file.write(pdf_bytes)
-        # image.close()
-        # file.close()
         # self.printQRCode()
 
     def printQRCode(self):
@@ -42,4 +42,4 @@ class qrGen:
 
 if __name__ == "__main__":
     a = qrGen()
-    a.genQR(123456, "test")
+    # a.genQR(123456, "test")

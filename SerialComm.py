@@ -1,7 +1,6 @@
 import serial.tools.list_ports
 import serial
 
-
 class commDev:
 
     def __init__(self):

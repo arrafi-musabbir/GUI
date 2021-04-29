@@ -5,13 +5,14 @@ from datetime import datetime
 import socket
 from random import randint
 import sshtunnel
-from config import key
+from config import key, TABLE_NAME
 import yaml
 from cryptography.fernet import Fernet
 
 class database:
 
     def __init__(self):
+        self.table_name = TABLE_NAME
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
@@ -19,20 +20,20 @@ class database:
 
     # establish connection to database
     def connectDB(self):
-        global serverINFO 
-        serverINFO = dict()
+        self.serverINFO = dict()
         def decryptServerINFO():
             with open('creds.yml', 'r') as file:
                 serverINFO = yaml.safe_load(file)
                 a = Fernet(key.encode())
                 for i in serverINFO:
-                    serverINFO[i] = a.decrypt(serverINFO[i].encode()).decode()
+                    self.serverINFO[i] = a.decrypt(serverINFO[i].encode()).decode()
         try:
             decryptServerINFO()
-            self.tunnel = SSHTunnelForwarder((serverINFO['SSH_HOST'], serverINFO['SSH_PORT']), 
+            serverINFO = self.serverINFO
+            self.tunnel = SSHTunnelForwarder((serverINFO['SSH_HOST'], int(serverINFO['SSH_PORT'])), 
                                         ssh_password=serverINFO['SSH_PSWD'], 
                                         ssh_username=serverINFO['SSH_UNAME'], 
-                                        remote_bind_address=(serverINFO['DB_HOST'], serverINFO['DB_PORT'])) 
+                                        remote_bind_address=(serverINFO['DB_HOST'], int(serverINFO['DB_PORT']))) 
             self.tunnel.start()
             self.myDB = mysql.connector.connect(
                 host=serverINFO['DB_HOST'],
@@ -70,7 +71,7 @@ class database:
 
     def describeTable(self):
         if self.db_state == 1:
-            self.mycursor.execute("DESCRIBE {}".format(TABLE_NAME))
+            self.mycursor.execute("DESCRIBE {}".format(self.table_name))
             for x in self.mycursor:
                 print(x)
         else:
@@ -98,7 +99,7 @@ class database:
             try:
                 for i in range(n):
                     self.mycursor.execute(
-                        "DELETE FROM deviceid ORDER BY CreatedOn DESC LIMIT 1")
+                        "DELETE FROM {} ORDER BY CreatedOn DESC LIMIT 1".format(self.table_name))
                 self.myDB.commit()
                 print(n, "number of entries deletation succcessfull")
             except AttributeError:
@@ -112,7 +113,7 @@ class database:
         try:
             # self.mycursor.execute(
             #     "SELECT Serial FROM deviceid ORDER BY CreatedOn DESC LIMIT 1")
-            self.mycursor.execute("SELECT * FROM deviceid")
+            self.mycursor.execute("SELECT * FROM {}".format(self.table_name))
             num_rows = self.mycursor.fetchall()
             return len(num_rows)
 
