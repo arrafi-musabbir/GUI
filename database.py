@@ -3,11 +3,11 @@ from sshtunnel import SSHTunnelForwarder
 import time
 from datetime import datetime
 import socket
-from random import randint
 import sshtunnel
 from config import key, TABLE_NAME
 import yaml
 from cryptography.fernet import Fernet
+import os
 
 class database:
 
@@ -22,7 +22,7 @@ class database:
     def connectDB(self, server):
         self.serverINFO = dict()
         def decryptServerINFO():
-            with open('creds.yml', 'r') as file:
+            with open(os.path.join(os.getcwd(),'creds.yml'), 'r') as file:
                 serverINFO = yaml.safe_load(file)
                 a = Fernet(key.encode())
                 for i in serverINFO:
@@ -131,10 +131,8 @@ class database:
         try:
             # self.mycursor.execute(
             #     "SELECT Serial FROM deviceid ORDER BY CreatedOn DESC LIMIT 1")
-            self.mycursor.execute("SELECT * FROM {}".format(self.table_name))
-            num_rows = self.mycursor.fetchall()
-            return len(num_rows)
-
+            self.mycursor.execute("SELECT * FROM {}".format(self.table_name))            
+            return len(self.mycursor.fetchall())
         except:
             print("database connection failed")
             return False
