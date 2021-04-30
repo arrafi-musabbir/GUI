@@ -11,15 +11,15 @@ from cryptography.fernet import Fernet
 
 class database:
 
-    def __init__(self):
-        self.table_name = TABLE_NAME
+    def __init__(self, server):
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
         self.internetConnectivity = self.checkInternetSocket()
+        self.connectDB(server)
 
     # establish connection to database
-    def connectDB(self):
+    def connectDB(self, server):
         self.serverINFO = dict()
         def decryptServerINFO():
             with open('creds.yml', 'r') as file:
@@ -27,28 +27,46 @@ class database:
                 a = Fernet(key.encode())
                 for i in serverINFO:
                     self.serverINFO[i] = a.decrypt(serverINFO[i].encode()).decode()
-        try:
-            decryptServerINFO()
-            serverINFO = self.serverINFO
-            self.tunnel = SSHTunnelForwarder((serverINFO['SSH_HOST'], int(serverINFO['SSH_PORT'])), 
-                                        ssh_password=serverINFO['SSH_PSWD'], 
-                                        ssh_username=serverINFO['SSH_UNAME'], 
-                                        remote_bind_address=(serverINFO['DB_HOST'], int(serverINFO['DB_PORT']))) 
-            self.tunnel.start()
-            self.myDB = mysql.connector.connect(
-                host=serverINFO['DB_HOST'],
-                port=self.tunnel.local_bind_port,
-                user=serverINFO['DB_UNAME'],
-                password=serverINFO['DB_PSWD'],
-                database=serverINFO['DB_NAME'])
-            self.db_state = 1
-            self.mycursor = self.myDB.cursor()
-            print("Server connection established successfully")
-        except mysql.connector.errors.InterfaceError:
-            self.db_state = 0
-            print("Server connection failed")
-        # print(self.serverINFO)
-        return self.db_state
+        if server == 'remote':
+            try:
+                decryptServerINFO()
+                serverINFO = self.serverINFO
+                self.tunnel = SSHTunnelForwarder((serverINFO['SSH_HOST'], int(serverINFO['SSH_PORT'])), 
+                                            ssh_password=serverINFO['SSH_PSWD'], 
+                                            ssh_username=serverINFO['SSH_UNAME'], 
+                                            remote_bind_address=(serverINFO['DB_HOST'], int(serverINFO['DB_PORT']))) 
+                self.tunnel.start()
+                self.myDB = mysql.connector.connect(
+                    host=serverINFO['DB_HOST'],
+                    port=self.tunnel.local_bind_port,
+                    user=serverINFO['DB_UNAME'],
+                    password=serverINFO['DB_PSWD'],
+                    database=serverINFO['DB_NAME'])
+                self.table_name = TABLE_NAME
+                self.db_state = 1
+                self.mycursor = self.myDB.cursor()
+                print("Server connection established successfully")
+            except mysql.connector.errors.InterfaceError:
+                self.db_state = 0
+                print("Server connection failed")
+
+            return self.db_state
+        else:
+            try:
+                self.myDB = mysql.connector.connect(
+                        host=serverINFO['local_DB_HOST'],
+                        port=3306,
+                        user=serverINFO['local_DB_UNAME'],
+                        password=serverINFO['local_DB_PSWD'],
+                        database=serverINFO['local_DB_NAME'])
+                self.table_name = 'deviceid'
+                self.db_state = 1
+                self.mycursor = self.myDB.cursor()
+                print("Server connection established successfully")
+            except mysql.connector.errors.InterfaceError:
+                self.db_state = 0
+                print("Server connection failed")
+            return self.db_state
     
     
         
@@ -137,8 +155,8 @@ class database:
 
 if __name__ == "__main__":
     print("IN DATABASE")
-    a = database()
-    a.connectDB()
+    a = database('remote')
+    # a.connectDB()
     a.describeTable()
     # a.clearTable()
     a.disconnect()

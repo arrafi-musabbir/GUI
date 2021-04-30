@@ -12,3 +12,7 @@ python.exe - Shortcut.lnk
 \*.json
 creds.yml
 creds.json
+build
+dist
+run.spec
+run.exe

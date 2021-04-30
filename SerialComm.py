@@ -1,5 +1,7 @@
 import serial.tools.list_ports
 import serial
+from serial.serialutil import SerialException
+
 
 class commDev:
 
@@ -23,7 +25,7 @@ class commDev:
                         while True:
                             print("sending data")
                             self.sc.write(id.encode())
-                            if self.sc.readline().strip().decode() == "success":
+                            if self.sc.readline().strip().decode() == "successful":
                                 print("Communication successful")
                                 print("Device registered successfully")
                                 self.sc.timeout = 3

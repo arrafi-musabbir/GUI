@@ -392,6 +392,9 @@ class Ui_MainWindow(object):
     def deleteAllentries(self):
         if self.confirmAllDeletation():
             self.db.clearEntries(self.db_stored)
+            self.db_stored = 0
+            text = "Number of devices initiated in current session: " + str(self.db_stored)
+            self.grapics.currNumber.setText(text)
 
     def online(self):
         # time.sleep(1)
