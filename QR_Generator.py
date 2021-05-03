@@ -3,6 +3,8 @@ import os
 import image
 import sys
 from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw 
 import cv2
 # from PIL import Image
 # import img2pdf
@@ -37,10 +39,11 @@ class qrGen:
         img.paste(icon, (w, h))
         frame = Image.new('RGB', (500, 500))
         frame.paste(img,(25,5))
-        print(frame.size)
-        frame.show()
+        draw = ImageDraw.Draw(frame)
+        font = ImageFont.truetype("Roboto-medium.ttf", 30)
+        draw.text((100, 460), 'ID: '+str(id) ,(255,255,255),font=font)
         self.qr_path = os.path.join(self.qrs_folder_path, (str(sim) + ".png"))
-        img.save(self.qr_path, dpi= (300,300))
+        frame.save(self.qr_path, dpi= (300,300))
 
     def printQRCode(self):
         print(self.qr_path)
@@ -67,6 +70,6 @@ if __name__ == "__main__":
     a = qrGen()
     # a.genQR(1,1)
     # a.printImagesInGrid()
-    for i in range(1103202105031862, 1103202105031900):   
-        a.genQR(i, i)
-        break
+    # for i in range(1103202105031862, 1103202105031900):   
+    #     i = str(i)
+    #     a.genQR(i, i[5:])
