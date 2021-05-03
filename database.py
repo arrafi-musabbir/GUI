@@ -8,41 +8,37 @@ from config import key, TABLE_NAME
 import yaml
 from cryptography.fernet import Fernet
 import os
+from PasswordManager import PasswordManager
 
 class database:
 
-    def __init__(self, server):
+    def __init__(self, passphrase, **args):
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
         self.internetConnectivity = self.checkInternetSocket()
-        self.connectDB(server)
-
+        
+        self.serverINFO = PasswordManager(passphrase).retrieveServerCredentials()
+        self.connectDB(**args)
+        
     # establish connection to database
-    def connectDB(self, server):
-        self.serverINFO = dict()
-        def decryptServerINFO():
-            with open(os.path.join(os.getcwd(),'creds.yml'), 'r') as file:
-                serverINFO = yaml.safe_load(file)
-                a = Fernet(key.encode())
-                for i in serverINFO:
-                    self.serverINFO[i] = a.decrypt(serverINFO[i].encode()).decode()
+    def connectDB(self, server = 'local'):
+        print(server)
         if server == 'remote':
             try:
-                decryptServerINFO()
                 serverINFO = self.serverINFO
-                self.tunnel = SSHTunnelForwarder((serverINFO['SSH_HOST'], int(serverINFO['SSH_PORT'])), 
-                                            ssh_password=serverINFO['SSH_PSWD'], 
-                                            ssh_username=serverINFO['SSH_UNAME'], 
-                                            remote_bind_address=(serverINFO['DB_HOST'], int(serverINFO['DB_PORT']))) 
+                self.tunnel = SSHTunnelForwarder((self.serverINFO['SSH_HOST'], int(self.serverINFO['SSH_PORT'])), 
+                                            ssh_password=self.serverINFO['SSH_PSWD'], 
+                                            ssh_username=self.serverINFO['SSH_USER'], 
+                                            remote_bind_address=(self.serverINFO['DB_HOST'], int(self.serverINFO['DB_PORT']))) 
                 self.tunnel.start()
                 self.myDB = mysql.connector.connect(
-                    host=serverINFO['DB_HOST'],
+                    host=self.serverINFO['DB_HOST'],
                     port=self.tunnel.local_bind_port,
-                    user=serverINFO['DB_UNAME'],
-                    password=serverINFO['DB_PSWD'],
-                    database=serverINFO['DB_NAME'])
-                self.table_name = TABLE_NAME
+                    user=self.serverINFO['DB_USER'],
+                    password=self.serverINFO['DB_PSWD'],
+                    database=self.serverINFO['DB_NAME'])
+                self.table_name = self.serverINFO['DB_TABLE_NAME']
                 self.db_state = 1
                 self.mycursor = self.myDB.cursor()
                 print("Server connection established successfully")
@@ -153,7 +149,7 @@ class database:
 
 if __name__ == "__main__":
     print("IN DATABASE")
-    a = database('remote')
+    a = database(passphrase = 'alphadeltafoxtrot')
     # a.connectDB()
     a.describeTable()
     # a.clearTable()
