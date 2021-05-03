@@ -55,37 +55,37 @@ class qrGen:
         os.startfile(self.qr_path, 'print')
 
     def printImagesInGrid(self):
+        
         d = self.qrs_folder_path   
         qrs_path = list()
         for path in sorted(os.listdir(d), key=len):
             qrs_path.append(os.path.join(self.qrs_folder_path,path))
-        print(qrs_path[1])
-        # img0 = Image.open(qrs_path[0])
-        # img1 = Image.open(qrs_path[1])
+
         imgs = list()
         for i in qrs_path:
             img = Image.open(i)
             imgs.append(img)
-        newImg = Image.new('RGB', (3000, 2000))   
-        currX = 0
-        currY = 0
-        for i in range(6):
-            newImg.paste(imgs[i], (currX, currY))
-            currX += 500
+        gridImg = Image.new('RGBA', (2000, 3000))   
+        currX = 500
+        currY = 500
+        i = 0
         
-        # newImg = Image.new('RGB', (img0.width+img1.width, img1.height))
-        # newImg.paste(img0, (0,0))
-        # newImg.paste(img1, (img1.width+20,0))
-        newImg.show()
-        # newImg.save('newImg.png', dpi= (300,300))
-        
-        # os.startfile(newImg, 'print')
+        for row in range(4):
+            for col in range(6):
+                gridImg.paste(imgs[i], (row*currX, col*currY))
+                i += 1
+        try:
+            os.mkdir("Print Ready QRs")
+        except FileExistsError:
+            pass
+        path = os.path.join(os.getcwd(), "Print Ready QRs")
+        gridImg.save('newImg.png', dpi= (300,300))
 
 
 if __name__ == "__main__":
     a = qrGen()
     # a.genQR(1,1)
-    # a.printImagesInGrid()
-    for i in range(1103202105031862, 1103202105031900):   
-        i = str(i)
-        a.genQR(i, i[5:])
+    a.printImagesInGrid()
+    # for i in range(1103202105031862, 1103202105031900):   
+    #     i = str(i)
+    #     a.genQR(i, i[5:])
