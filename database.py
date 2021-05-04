@@ -44,27 +44,27 @@ class database:
                 self.table_name = self.serverINFO['DB_TABLE_NAME']
                 self.db_state = 1
                 self.mycursor = self.myDB.cursor()
-                print("Server connection established successfully")
+                print("Remote server connection established successfully")
             except mysql.connector.errors.InterfaceError:
                 self.db_state = 0
-                print("Server connection failed")
+                print("Remote server connection failed")
 
             return self.db_state
         elif self.server == 'local':
             try:
                 self.myDB = mysql.connector.connect(
-                        host=serverINFO['local_DB_HOST'],
+                        host=self.serverINFO['local_DB_HOST'],
                         port=3306,
-                        user=serverINFO['local_DB_UNAME'],
-                        password=serverINFO['local_DB_PSWD'],
-                        database=serverINFO['local_DB_NAME'])
-                self.table_name = 'deviceid'
+                        user=self.serverINFO['local_DB_UNAME'],
+                        password=self.serverINFO['local_DB_PSWD'],
+                        database=self.serverINFO['local_DB_NAME'])
+                self.table_name = self.serverINFO['local_DB_TABLE']
                 self.db_state = 1
                 self.mycursor = self.myDB.cursor()
-                print("Server connection established successfully")
+                print("Local server connection established successfully")
             except mysql.connector.errors.InterfaceError:
                 self.db_state = 0
-                print("Server connection failed")
+                print("Local server connection failed")
             return self.db_state
     
     # add new entries
@@ -158,7 +158,7 @@ class database:
 
 if __name__ == "__main__":
     print("IN DATABASE")
-    a = database(passphrase)
+    # a = database(passphrase)
     # a.connectDB()
     # a.describeTable()
     # a.clearTable()

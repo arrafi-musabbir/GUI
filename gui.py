@@ -14,7 +14,7 @@ from QR_Generator import qrGen
 
 class Ui_MainWindow(object):
 
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow, *args):
 
         MainWindow.setObjectName("MainWindow")
 
@@ -26,8 +26,10 @@ class Ui_MainWindow(object):
         # self.error_dialog = QtWidgets.QErrorMessage()
         MainWindow.setCentralWidget(self.centralwidget)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-        self.db = database('alphadeltafoxtrot')
+        try:
+            self.db = database('alphadeltafoxtrot', args[0])
+        except IndexError:
+            self.db = database('alphadeltafoxtrot')
         self.db_state = self.db.db_state
         self.total_ids = self.db.totalIDs
         self.genID = genID()
