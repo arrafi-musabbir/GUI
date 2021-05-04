@@ -12,17 +12,17 @@ from PasswordManager import PasswordManager
 
 class database:
 
-    def __init__(self, passphrase, **args):
+    def __init__(self, passphrase):
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
         self.internetConnectivity = self.checkInternetSocket()
         
         self.serverINFO = PasswordManager(passphrase).retrieveServerCredentials()
-        self.connectDB(**args)
+        self.connectDB()
         
     # establish connection to database
-    def connectDB(self, server = 'local'):
+    def connectDB(self, server = 'remote'):
         print(server)
         if server == 'remote':
             try:
@@ -64,9 +64,6 @@ class database:
                 print("Server connection failed")
             return self.db_state
     
-    
-        
-        
     # add new entries
     
     def addNew(self, Sim, ID, Password, CreatedOn):
@@ -125,14 +122,23 @@ class database:
     # get total number of entries/ID
     def getTotalID(self):
         try:
-            # self.mycursor.execute(
-            #     "SELECT Serial FROM deviceid ORDER BY CreatedOn DESC LIMIT 1")
             self.mycursor.execute("SELECT * FROM {}".format(self.table_name))            
             return len(self.mycursor.fetchall())
         except:
             print("database connection failed")
             return False
 
+    # get last registered ID of current date
+    def getLastID(self):
+
+        self.mycursor.execute("SELECT ID FROM {} ORDER BY CreatedOn DESC LIMIT 1".format(self.table_name))
+        lastidYMD = self.mycursor.fetchall()[0][0]
+        if lastidYMD[4:12] != datetime.today().strftime("%Y%m%d"):
+            return 0
+        else:
+            return int(lastidYMD[-4:])
+
+    
     # check if a stable internet connection is available
     def checkInternetSocket(self, host="8.8.8.8", port=53, timeout=3):
         try:
@@ -151,6 +157,8 @@ if __name__ == "__main__":
     print("IN DATABASE")
     a = database(passphrase = 'alphadeltafoxtrot')
     # a.connectDB()
-    a.describeTable()
+    # a.describeTable()
     # a.clearTable()
-    a.disconnect()
+    # print(a.getTotalID())
+    print(a.getLastID())
+    # a.disconnect()

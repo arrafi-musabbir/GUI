@@ -1,14 +1,9 @@
 import qrcode
 import os
 import image
-import sys
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw 
-from datetime import datetime
-# from PIL import Image
-# import img2pdf
-
 
 class qrGen:
 
@@ -74,12 +69,10 @@ class qrGen:
             for path in sorted(os.listdir(d), key=len):
                 if key2 is None:
                     if (int(path[4:4+len(str(key1))]) == int(key1)):
-                        # print((int(path[4:4+len(str(key1))])))
                         qrs_path.append(os.path.join(self.qrs_folder_path,path))
                         i += 1
                 else:
                     if (int(path[4:4+len(str(key1))]) >= int(key1)) & (int(path[4:4+len(str(key2))]) <= int(key2)):
-                            # print((int(path[4:4+len(str(key1))])))
                             qrs_path.append(os.path.join(self.qrs_folder_path,path))
                             i += 1
             break
@@ -114,8 +107,8 @@ class qrGen:
 
 if __name__ == "__main__":
     a = qrGen()
-    # for i in range(1103202105070001, 1103202105070100):   
-    #     i = str(i)
-    #     a.genQR(i, i[5:])
+    for i in range(1103202105070001, 1103202105070100):   
+        i = str(i)
+        a.genQR(i, i[5:])
         # break
     a.printImagesInGrid(20210503001)
