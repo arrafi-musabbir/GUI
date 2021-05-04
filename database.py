@@ -12,19 +12,22 @@ from PasswordManager import PasswordManager
 
 class database:
 
-    def __init__(self, passphrase):
+    def __init__(self, *args):
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
         self.internetConnectivity = self.checkInternetSocket()
-        
-        self.serverINFO = PasswordManager(passphrase).retrieveServerCredentials()
+        try:
+            self.serverINFO = PasswordManager(args[0]).retrieveServerCredentials(args[1])
+            self.server = args[1]
+        except IndexError:
+            self.server = 'remote'
+            self.serverINFO = PasswordManager(args[0]).retrieveServerCredentials()
         self.connectDB()
         
     # establish connection to database
-    def connectDB(self, server = 'remote'):
-        print(server)
-        if server == 'remote':
+    def connectDB(self):
+        if self.server == 'remote' :
             try:
                 serverINFO = self.serverINFO
                 self.tunnel = SSHTunnelForwarder((self.serverINFO['SSH_HOST'], int(self.serverINFO['SSH_PORT'])), 
@@ -155,10 +158,10 @@ class database:
 
 if __name__ == "__main__":
     print("IN DATABASE")
-    a = database(passphrase = 'alphadeltafoxtrot')
+    a = database(passphrase)
     # a.connectDB()
     # a.describeTable()
     # a.clearTable()
     # print(a.getTotalID())
-    print(a.getLastID())
+    # print(a.getLastID())
     # a.disconnect()

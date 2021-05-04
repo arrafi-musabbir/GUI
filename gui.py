@@ -283,7 +283,7 @@ class Ui_MainWindow(object):
                         if self.commDev.connectedPort is not None:
                             if self.commDev.sc_state == 1:
                                 try:
-                                    nextID = self.db.getTotalID() + 1
+                                    nextID = self.db.getLastID() + 1
                                 except:
                                     self.grapics.dbmsg.show()
                                     print("database didn't respond")

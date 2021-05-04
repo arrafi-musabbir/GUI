@@ -8,8 +8,8 @@ import cryptography.fernet
 
 class PasswordManager:
     
-    def __init__(self, passphrase):
-        self.encryptiontype = cryptography.fernet.Fernet(self.generateKey(passphrase, self.retrieveSalt()))
+    def __init__(self, *args):
+        self.encryptiontype = cryptography.fernet.Fernet(self.generateKey(args[0], self.retrieveSalt()))
         
     def generateSalt(self):
         salt = os.urandom(32)
@@ -39,14 +39,21 @@ class PasswordManager:
     )
         return base64.urlsafe_b64encode(kdf.derive(passphrase.encode()))
     
-    def retrieveServerCredentials(self):
+    def retrieveServerCredentials(self, server='remote'):
         serverCreds = dict()
         try:
-            with open(os.path.join(os.getcwd(),'creds.yml'), 'r') as file:
-                yaml_data = yaml.safe_load(file)
-                for key in yaml_data:
-                    serverCreds[self.encryptiontype.decrypt(key).decode()] = self.encryptiontype.decrypt(yaml_data[key]).decode()
-            return serverCreds 
+            if server == 'remote':
+                with open(os.path.join(os.getcwd(),'creds.yml'), 'r') as file:
+                    yaml_data = yaml.safe_load(file)
+                    for key in yaml_data:
+                        serverCreds[self.encryptiontype.decrypt(key).decode()] = self.encryptiontype.decrypt(yaml_data[key]).decode()
+                return serverCreds 
+            elif server == 'local': 
+                with open(os.path.join(os.getcwd(),'creds_local.yml'), 'r') as file:
+                    yaml_data = yaml.safe_load(file)
+                    for key in yaml_data:
+                        serverCreds[key] = yaml_data[key]
+                return serverCreds 
         except cryptography.fernet.InvalidToken:
             print("Wrong passphrase")
             return False
@@ -65,8 +72,14 @@ class PasswordManager:
 if __name__ == '__main__':
     # replace passphrase with your passphrase
     a = PasswordManager("alphadeltafoxtrot")
-    # print(a.retrieveServerCredentials())
-    a.encryptServerCredentials()   
+    # a.encryptServerCredentials()
+    print(a.retrieveServerCredentials())
+
+    # a.encryptServerCredentials()   
+
+
+
+    
     
     
     
