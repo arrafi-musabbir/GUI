@@ -51,57 +51,71 @@ class qrGen:
         draw.rectangle([(0 ,-2), (505, 505)], outline ="black", width=8)
         self.qr_path = os.path.join(self.qrs_folder_path, (str(id) + ".png"))
         frame.save(self.qr_path, dpi= (500,500))
-        # frame.show()
 
     def printQRCode(self):
         print(self.qr_path)
         os.startfile(self.qr_path, 'print')
 
-    def printImagesInGrid(self, key1, numberOfiters=24):
+    def printImagesInGrid(self, *args):
+        try:
+            os.mkdir("Print Ready QRs")
+        except FileExistsError:
+            pass
+        try:
+            key2 = None
+            key1 = args[0]
+            key2 = args[1]
+        except IndexError:
+            pass
         d = self.qrs_folder_path   
         qrs_path = list()
         while True:
             i = 0
             for path in sorted(os.listdir(d), key=len):
-                if i == numberOfiters:
-                    break
-                if (int(path[4:4+len(str(key1))]) >= int(key1)):
-                    print(path)
-                    qrs_path.append(os.path.join(self.qrs_folder_path,path))
-                    if i == 0:
-                        initial = path[:-4] 
-                    i += 1
-                    final = path[:-4] 
+                if key2 is None:
+                    if (int(path[4:4+len(str(key1))]) == int(key1)):
+                        # print((int(path[4:4+len(str(key1))])))
+                        qrs_path.append(os.path.join(self.qrs_folder_path,path))
+                        i += 1
+                else:
+                    if (int(path[4:4+len(str(key1))]) >= int(key1)) & (int(path[4:4+len(str(key2))]) <= int(key2)):
+                            # print((int(path[4:4+len(str(key1))])))
+                            qrs_path.append(os.path.join(self.qrs_folder_path,path))
+                            i += 1
             break
         imgs = list()
         for i in qrs_path:
             img = Image.open(i)
             imgs.append(img)
-        gridImg = Image.new('RGB', (2000, 3000), 'white')   
-        currX = 500
-        currY = 500
+        del path
+        pages = (len(imgs)-1)//24+1
         i = 0
-        for row in range(6):
-            for col in range(4):
-                try:
-                    gridImg.paste(imgs[i], (col*currX, row*currY))
-                    i += 1
-                except IndexError:
-                    break
-        try:
-            os.mkdir("Print Ready QRs")
-        except FileExistsError:
-            pass
-        path = os.path.join(os.getcwd(), "Print Ready QRs")
-        print("From ID:{} to ID:{} added to {}.pdf and ready to print".format(initial, final, initial[4:]+' >> '+final[4:]))
-        gridImg.save(path+'//'+initial[4:]+' - '+final[4:]+'.pdf', dpi= (500, 500))
+        if len(qrs_path)!= 0:
+            initial = (qrs_path[i][-16:-4])
+
+        for n in range(pages):
+            gridImg = Image.new('RGB', (2000, 3000), 'white')   
+            currX = 500
+            currY = 500
+            for row in range(6):
+                for col in range(4):
+                    try:
+                        gridImg.paste(imgs[i], (col*currX, row*currY))
+                        i += 1
+                        if isinstance((i/24), int):
+                            break
+                    except IndexError:
+                        break
+            path = os.path.join(os.getcwd(), "Print Ready QRs")
+            final = (qrs_path[i-1][-16:-4])
+            print("From ID:{} to ID:{} added to {}.pdf and ready to print".format(initial, final, initial+' >> '+final))
+            gridImg.save(path+'//'+initial+' - '+final+'.png', dpi= (500, 500))
+            initial = str(int((qrs_path[i-1][-16:-4]))+1)
 
 if __name__ == "__main__":
     a = qrGen()
-    # for i in range(1103202105031862, 1103202105031952, 2):   
+    # for i in range(1103202105070001, 1103202105070100):   
     #     i = str(i)
     #     a.genQR(i, i[5:])
         # break
-    a.printImagesInGrid(2021050318, 32)
-    # b = datetime.now().strftime("%Y%m%d")
-    # print(b)
+    a.printImagesInGrid(20210503001)
