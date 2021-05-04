@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        self.db = database()
+        self.db = database('alphadeltafoxtrot')
         self.db_state = self.db.db_state
         self.total_ids = self.db.totalIDs
         self.genID = genID()

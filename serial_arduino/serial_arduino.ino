@@ -11,7 +11,7 @@ void setup() {
     incomingByte = Serial.readStringUntil('\n');
 
     if(incomingByte.length() >= 20) {
-      Serial.println("success");
+      Serial.println("successful");
       for(int i=0;i<5;i++){
       digitalWrite(LED_BUILTIN, HIGH);
       delay(500);

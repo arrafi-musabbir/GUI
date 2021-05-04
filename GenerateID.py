@@ -22,7 +22,7 @@ class genID:
         self.en_pswd = self.key[0] + self.enPswd(pswd).decode()
         # print(len(self.en_pswd))
         self.id = pswd + "1103" + datetime.today().strftime("%Y%m%d") + '0000'
-        self.id = str(int(self.id) + int(newSerial)
+        self.id = str(int(self.id) + int(newSerial))
         # print("New generated ID:>> ", self.id[0:4] + " " + self.id[4:8] + " "
         #       + self.id[8:12] + " " + self.id[12:14] + " " + self.id[14:16] + " " + self.id[16:])
         return self.id, self.en_pswd
@@ -48,32 +48,4 @@ class genID:
 
 
 if __name__ == "__main__":
-    import yaml
-    s = dict()
-    print(key)
-    a = Fernet(key)
-    with open('creds.yml', 'r') as f:
-        y = yaml.safe_load(f)
-        for i in y:
-            # print(y[i])
-            try:
-                s[i] = a.decrypt(y[i].encode()).decode()
-                # print(i)
-            except cryptography.fernet.InvalidToken:
-                pass
-    # print(type(s['DB_HOST']))
-    # print(s)
-    for i in s:
-            # print(i)
-            s[i] = a.encrypt(str(s[i]).encode()).decode()
-            print(s[i])
-    # with open('creds.yml', 'w') as f:
-    #     for i in s:
-    #         print(i)
-    #         s[i] = a.encrypt(str(s[i]).encode()).decode()
-    #         print(s[i])
-    #     s['key'] = key.decode()
-    #     yaml.dump(s, f)
-        
-        
-    # print(a.newID(1)[0])
+    pass

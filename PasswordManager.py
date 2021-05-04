@@ -71,7 +71,7 @@ class PasswordManager:
     
 if __name__ == '__main__':
     # replace passphrase with your passphrase
-    a = PasswordManager("alphadeltafoxtrot")
+    a = PasswordManager(passphrase)
     # a.encryptServerCredentials()
     print(a.retrieveServerCredentials())
 

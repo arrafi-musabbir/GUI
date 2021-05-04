@@ -50,7 +50,7 @@ class database:
                 print("Server connection failed")
 
             return self.db_state
-        else:
+        elif self.server == 'local':
             try:
                 self.myDB = mysql.connector.connect(
                         host=serverINFO['local_DB_HOST'],
