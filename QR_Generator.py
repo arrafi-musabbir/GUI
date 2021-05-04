@@ -57,15 +57,16 @@ class qrGen:
         print(self.qr_path)
         os.startfile(self.qr_path, 'print')
 
-    def printImagesInGrid(self, key1, key2):
+    def printImagesInGrid(self, key1, numberOfiters=24):
         d = self.qrs_folder_path   
         qrs_path = list()
         while True:
             i = 0
             for path in sorted(os.listdir(d), key=len):
-                if i == 24:
+                if i == numberOfiters:
                     break
-                if (int(path[4:4+len(str(key1))]) >= int(key1)) & (int(path[4:4+len(str(key2))]) <= int(key2)):
+                if (int(path[4:4+len(str(key1))]) >= int(key1)):
+                    print(path)
                     qrs_path.append(os.path.join(self.qrs_folder_path,path))
                     if i == 0:
                         initial = path[:-4] 
@@ -93,14 +94,14 @@ class qrGen:
             pass
         path = os.path.join(os.getcwd(), "Print Ready QRs")
         print("From ID:{} to ID:{} added to {}.pdf and ready to print".format(initial, final, initial[4:]+' >> '+final[4:]))
-        gridImg.save(path+'//'+initial[4:]+' - '+final[4:]+'.png', dpi= (500, 500))
+        gridImg.save(path+'//'+initial[4:]+' - '+final[4:]+'.pdf', dpi= (500, 500))
 
 if __name__ == "__main__":
     a = qrGen()
-    # for i in range(1103202105031862, 1103202105031892):   
+    # for i in range(1103202105031862, 1103202105031952, 2):   
     #     i = str(i)
     #     a.genQR(i, i[5:])
-    #     # break
-    # a.printImagesInGrid(20210503,20210504)
-    b = datetime.now().strftime("%H")
-    print(b)
+        # break
+    a.printImagesInGrid(2021050318, 32)
+    # b = datetime.now().strftime("%Y%m%d")
+    # print(b)
