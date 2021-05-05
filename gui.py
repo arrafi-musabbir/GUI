@@ -434,18 +434,18 @@ class Ui_MainWindow(object):
             self.buttons.button5.setEnabled(False)
 
     def printQRs(self):
-        self.qr.printImagesInGrid(self.takeinputs())
+
+        self.qr.printImagesInGrid(self.takeIDinput())
     
     def takeIDinput(self):
         ID, ok = QtWidgets.QInputDialog.getText(
-            self.centralwidget, 'SIM NUMBER', 'Enter Sim Number:')
+            self.centralwidget, 'ID NUMBER', 'Enter ID:')
+        
         if ok:
             try:
-                print(ID)
-                print(ID[ID.find(',')+1:])
-                if ID.find(',') != -1:
-                    key1 = ID[:ID.find(',')]
-                    key2 = ID[ID.find(',')+1:]
+                if len(ID.split(',')) == 2:
+                    key1 = ID.split(',')[0]
+                    key2 = ID.split(',')[1]
                     return key1,key2
                 else:
                     key1 = ID

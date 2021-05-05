@@ -56,10 +56,11 @@ class qrGen:
             os.mkdir("Print Ready QRs")
         except FileExistsError:
             pass
+        print(args)
         try:
             key2 = None
-            key1 = args[0]
-            key2 = args[1]
+            key1 = args[0][0]
+            key2 = args[1][1]
         except IndexError:
             pass
         d = self.qrs_folder_path   
@@ -106,10 +107,13 @@ class qrGen:
             initial = str(int((qrs_path[i-1][-16:-4]))+1)
 
 if __name__ == "__main__":
-    a = qrGen()
+    # a = qrGen()
     # for i in range(1103202105070001, 1103202105070100):   
     #     i = str(i)
     #     a.genQR(i, i[5:])
     #     # break
-    a.printImagesInGrid(20210503001,202105030020)
+    # a.printImagesInGrid(202105030010,202105030020)
+    # a = '0192412414,131313'
+    # print(a.find(','))
+    # print(a.split(',')[1])
     pass
