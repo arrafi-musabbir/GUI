@@ -119,7 +119,14 @@ class database:
             try:
                 for i in range(n):
                     self.mycursor.execute(
-                        "DELETE FROM {} ORDER BY CreatedOn DESC LIMIT 1".format(self.table_name))
+                        "SELECT ID FROM {} ORDER BY ID DESC LIMIT 1".format(self.table_name))
+                    qr_file = self.mycursor.fetchone()[0][1:]
+                    try:
+                        os.remove(os.path.join(os.getcwd(),'QRs//'+qr_file+'.png'))
+                    except FileNotFoundError:
+                        print("QR for ID {} does not exists".format(qr_file))
+                    self.mycursor.execute(
+                        "DELETE FROM {} ORDER BY ID DESC LIMIT 1".format(self.table_name))
                 self.myDB.commit()
                 print(n, "number of entries deletation succcessfull")
             except AttributeError:
@@ -139,7 +146,7 @@ class database:
 
     # get last registered ID of current date
     def getLastID(self):
-        self.mycursor.execute("SELECT ID FROM {} ORDER BY CreatedOn DESC LIMIT 1".format(self.table_name))
+        self.mycursor.execute("SELECT ID FROM {} ORDER BY ID DESC LIMIT 1".format(self.table_name))
         lastidYMD = self.mycursor.fetchall()[0][0]
         if lastidYMD[-12:-4] != datetime.today().strftime("%Y%m%d"):
             return 0
@@ -190,8 +197,9 @@ if __name__ == "__main__":
     # a.connectDB()
     # # a.describeTable()
     # a.exportCSV()
-    a.importCSV()
+    # a.importCSV()
     # # a.clearTable()
     # # print(a.getTotalID())
-    # print(a.getLastID())
+    print(a.getLastID())
+    # a.clearEntries(1)
     # a.disconnect()
