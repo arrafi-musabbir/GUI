@@ -171,18 +171,12 @@ class database:
     def importCSV(self):
         self.clearTable()
         try:
-            n=0
             with open(os.path.join(self.csv_path,'exportedFromSheet_{}.csv'.format(datetime.today().strftime('%d %b %Y'))), 'r') as file:
                 csv_data = csv.reader(file, delimiter = ',')
                 for i in csv_data:
-                    if len(i) > 0:
-                        if n == 0:
-                            n+=1
-                        else:
-                            len(i)
-                            self.mycursor.execute(
-                                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), (i[0],i[1],i[2],i[3]))
-                            self.myDB.commit()
+                    self.mycursor.execute(
+                        "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), (i[0],i[1],i[2],i[3]))
+                    self.myDB.commit()
                 print("added to database successfully")
                 self.myDB.commit()
                 return True
