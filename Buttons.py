@@ -18,6 +18,9 @@ class buttons:
         self.reconnectServer()
         self.delete_allEntries()
         self.delete_entries()
+        self.importTOsheet()
+        self.importTOsql()
+
 
     def pushbutton1(self):  # on - off
         self.button1 = QtWidgets.QPushButton(self.centralwidget)
@@ -93,7 +96,8 @@ class buttons:
         self.button4.hide()
         self.button4.setObjectName("go back")
 
-    def pushbutton5(self):  # show device registrinformations
+    def pushbutton5(self):  # show device registration informations
+
         self.button5 = QtWidgets.QPushButton(self.centralwidget)
         self.button5.setGeometry(QtCore.QRect(
             cg.button3_x, cg.button3_y, cg.button2_width, cg.button2_height))
@@ -127,7 +131,7 @@ class buttons:
         self.button6.hide()
         self.button6.setObjectName("commPorts")
 
-    def pushbutton7(self):  # show display settings
+    def pushbutton7(self):  # show advanced database settings
         self.button7 = QtWidgets.QPushButton(self.centralwidget)
         self.button7.setGeometry(QtCore.QRect(
             cg.button1_x + 10, cg.button1_y + 100, cg.button6_width, cg.button6_height))
@@ -144,22 +148,39 @@ class buttons:
         self.button7.hide()
         self.button7.setObjectName("display")
 
-    def pushbutton8(self):  # change comm port
-        self.button8 = QtWidgets.QPushButton(self.centralwidget)
-        self.button8.setGeometry(QtCore.QRect(
-            cg.button3_x - 5, cg.button3_y - 5, cg.button8_width, cg.button8_height))
+    def importTOsheet(self):  # export to sheet
+        self.button12 = QtWidgets.QPushButton(self.centralwidget)
+        self.button12.setGeometry(QtCore.QRect(
+            cg.button1_x + 10, cg.button1_y - 50, cg.button6_width, cg.button6_height))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(self.cwd + "/" + cg.newUsb),
+        icon.addPixmap(QtGui.QPixmap(self.cwd + "/" + cg.toSheet),
                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.button8.setIcon(icon)
-        self.button8.setStyleSheet(
+        self.button12.setIcon(icon)
+        self.button12.setStyleSheet(
             "border-radius : 50; border : .1px solid black")
-        self.button8.setIconSize(QtCore.QSize(
-            cg.button8_width, cg.button8_height))
-        self.button8.setCheckable(False)
-        self.button8.setEnabled(False)
-        self.button8.hide()
-        self.button8.setObjectName("changeCommPort")
+        self.button12.setIconSize(QtCore.QSize(
+            cg.button6_width, cg.button6_height))
+        self.button12.setCheckable(False)
+        self.button12.setEnabled(False)
+        self.button12.hide()
+        self.button12.setObjectName("changeCommPort")
+
+    def importTOsql(self):  # export to sql
+        self.button13 = QtWidgets.QPushButton(self.centralwidget)
+        self.button13.setGeometry(QtCore.QRect(
+            cg.button1_x + 10, cg.button1_y + 100, cg.button6_width, cg.button6_height))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(self.cwd + "/" + cg.toSQL),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.button13.setIcon(icon)
+        self.button13.setStyleSheet(
+            "border-radius : 50; border : .1px solid black")
+        self.button13.setIconSize(QtCore.QSize(
+            cg.button6_width, cg.button6_height))
+        self.button13.setCheckable(False)
+        self.button13.setEnabled(False)
+        self.button13.hide()
+        self.button13.setObjectName("changeCommPort")
 
     def reconnectServer(self):  # reconnect server
         self.button9 = QtWidgets.QPushButton(self.centralwidget)

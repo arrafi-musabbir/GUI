@@ -1,7 +1,8 @@
 from oauth2client.service_account import ServiceAccountCredentials
 import os
 import gspread
-
+from google.auth.exceptions import TransportError
+import csv
 
 class spreadSheet:
 
@@ -9,53 +10,41 @@ class spreadSheet:
         self.connectSheet()
 
     def connectSheet(self):
-        scope = ['https://www.googleapis.com/auth/spreadsheets',
-                 'https://www.googleapis.com/auth/drive']
-        creds = ServiceAccountCredentials.from_json_keyfile_name(
-            filename=os.path.join(os.getcwd(), "creds.json"), scopes=scope)
-        client = gspread.authorize(creds)
-        self.sheet = client.open("DEVICE ID").sheet1
-        print("connection extablished")
-        return None
+        try:
+            scope = ['https://www.googleapis.com/auth/spreadsheets',
+                    'https://www.googleapis.com/auth/drive']
+            creds = ServiceAccountCredentials.from_json_keyfile_name(
+                filename=os.path.join(os.getcwd(), "creds.json"), scopes=scope)
+            self.client = gspread.authorize(creds)
+            self.sheet = self.client.open("device-id-and-pswd")
+            print("connection extablished with google spreadsheet")
+            return True
+        except TransportError:
+            print("couldn't establish a connection with google spreadsheet\nCheck your internet connections")
+            return False
+        
+    def exportCSV(self):
+        try:
+            sheet = self.sheet.sheet1
+            s = sheet.get_all_values()
+            # print(s)
+            with open('exportedFromSheet.csv', 'w', newline='') as file:
+                wr = csv.writer(file, dialect='excel')
+                wr.writerows(s)  
+                return True
+        except :
+            return False      
 
-    def del_lastID(self):
-        self.get_totalIDs()
-        print("Currently total id stored:", self.total_ids)
-        if self.total_ids != 0:
-            self.sheet.delete_rows(self.total_ids + 1)
-            self.sheet.update_acell("A2", self.total_ids - 1)
-            print("New total id stored after one deletion: ", self.get_totalIDs())
-        else:
-            print("No id stored")
-        return None
-
-    def get_a_value(self, s):
-
-        if s[0] == "C":
-            return self.dePswd(self.sheet.acell(s).value)
-        else:
-            return self.sheet.acell(s).value
-
-    def saveToSheet(self):
-
-        if self.total_ids == 0:
-            self.sheet.update_acell(
-                "B" + str(self.total_ids + 2), str(self.id[4:]))
-            self.sheet.update_acell(
-                "C" + str(self.total_ids + 2), self.en_pswd.decode())
-            self.sheet.update_acell("A2", self.total_ids + 1)
-            self.total_ids = self.total_ids + 1
-
-        else:
-            print("new id added")
-            self.sheet.update_acell(
-                "B" + str(self.total_ids + 2), str(self.id[4:]))
-            # print(type(self.en_pswd))
-            self.sheet.update_acell(
-                "C" + str(self.total_ids + 2), self.en_pswd.decode())
-            self.sheet.update_acell("A2", self.total_ids + 1)
-            self.total_ids = self.total_ids + 1
-
+    def importCSV(self):
+        try:
+            content = open('exportedFromDB.csv', 'r').read()
+            self.client.import_csv(self.sheet.id, content)
+            return True
+        except:
+            return False
 
 if __name__ == "__main__":
-    a = spreadSheet()
+    # a = spreadSheet()
+    # # a.importCSV()
+    # a.exportCSV()
+    pass

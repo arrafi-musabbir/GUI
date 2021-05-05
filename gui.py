@@ -10,7 +10,8 @@ from GenerateID import genID
 from SerialComm import commDev
 from datetime import datetime
 from QR_Generator import qrGen
-
+from spreadSheet import spreadSheet
+import webbrowser
 
 class Ui_MainWindow(object):
 
@@ -40,6 +41,7 @@ class Ui_MainWindow(object):
         self.number = "0"
         self.state = "Main"
         self.db_stored = 0
+        self.sheet = spreadSheet()
 
         self.grapics = grapics(self.centralwidget, self.cwd, self.commDev)
         self.buttons = buttons(self.centralwidget, self.cwd)
@@ -59,9 +61,12 @@ class Ui_MainWindow(object):
         self.buttons.button4.clicked.connect(self.button4_click)
         self.buttons.button5.clicked.connect(self.button5_click)
         self.buttons.button6.clicked.connect(self.button6_click)
+        self.buttons.button7.clicked.connect(self.advancedDBsettings)
         self.buttons.button9.clicked.connect(self.connectServer)
         self.buttons.button10.clicked.connect(self.deleteXentries)
         self.buttons.button11.clicked.connect(self.deleteAllentries)
+        self.buttons.button12.clicked.connect(self.importTOsheet)
+        self.buttons.button13.clicked.connect(self.importTOsql)
         # self.loadAnimation()
         # self.movie.start()
         # self.movie.stop()
@@ -168,6 +173,12 @@ class Ui_MainWindow(object):
             # self.grapics.click_to.hide()
         elif self.state == "info":
             self.grapics.credits.hide()
+            self.grapics.currNumber.hide()
+        elif self.state == 'advancedDB':
+            self.buttons.button12.setEnabled(False)
+            self.buttons.button12.hide()
+            self.buttons.button13.setEnabled(False)
+            self.buttons.button13.hide()
             self.grapics.currNumber.hide()
         self.backgroundBlur("enable")
         self.buttons.button4.show()
@@ -356,9 +367,28 @@ class Ui_MainWindow(object):
             self.loadMain()
         elif self.state == "dbSettingsinfo":
             self.loadDBsettings()
-
+        elif self.state == 'advancedDB':
+            self.goto_settings()
+        elif self.state == 'advancedDBinfo':
+            self.advancedDBsettings()
+            
     def button6_click(self):
         self.loadDBsettings()
+
+    def advancedDBsettings(self):
+        print('here')
+        self.state = 'advancedDB'
+        self.buttons.button4.show()
+        self.buttons.button4.setEnabled(True)
+        self.buttons.button6.hide()
+        self.buttons.button6.setEnabled(False)
+        self.buttons.button7.hide()
+        self.buttons.button7.setEnabled(False)
+        self.buttons.button12.show()
+        self.buttons.button12.setEnabled(True)
+        self.buttons.button13.show()
+        self.buttons.button13.setEnabled(True)
+        self.grapics.currNumber.hide()
 
     def button5_click(self):
         self.grapics.currentNumber(self.db_stored, self.db.getLastID(), self.db.getTotalID())
@@ -375,6 +405,8 @@ class Ui_MainWindow(object):
             self.buttons.button10.setEnabled(False)
             self.buttons.button11.hide()
             self.buttons.button11.setEnabled(False)
+            self.buttons.button5.hide()
+            self.buttons.button5.setEnabled(False)
         elif self.state == 'Settings':
             self.state = "info"
             self.buttons.button4.show()
@@ -386,7 +418,25 @@ class Ui_MainWindow(object):
             self.buttons.button7.hide()
             self.buttons.button7.setEnabled(False)
             self.grapics.showInfos()
+        elif self.state == 'advancedDB':
+            self.state = 'advancedDBinfo'
+            self.buttons.button12.hide()
+            self.buttons.button12.setEnabled(False)
+            self.buttons.button13.hide()
+            self.buttons.button13.setEnabled(False)
+            self.buttons.button5.hide()
+            self.buttons.button5.setEnabled(False)
+
+    
+    def importTOsheet(self):
+        if self.db.exportCSV():
+            if self.sheet.importCSV():
+                webbrowser.open('https://docs.google.com/spreadsheets/d/1nA-FiYo_6NwNOVBExcAjzEDG7Bk5jFFo8eDTMKjhAFw/edit?usp=sharing', new=1)
         
+    def importTOsql(self):
+        if self.sheet.exportCSV():
+            if self.db.importCSV():
+                print("saved changes to server")
 
     def takeXentries(self):
         Number, ok = QtWidgets.QInputDialog.getText(

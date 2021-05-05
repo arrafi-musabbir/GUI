@@ -9,6 +9,7 @@ import yaml
 from cryptography.fernet import Fernet
 import os
 from PasswordManager import PasswordManager
+import csv
 
 class database:
 
@@ -72,7 +73,7 @@ class database:
     def addNew(self, Sim, ID, Password, CreatedOn):
         try:
             self.mycursor.execute(
-                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), (Sim, ID, Password, CreatedOn))
+                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), ("'"+str(Sim), "'"+str(ID), Password, CreatedOn))
             self.myDB.commit()
             time.sleep(1)
             print("added to database successfully")
@@ -125,7 +126,7 @@ class database:
     # get total number of entries/ID
     def getTotalID(self):
         try:
-            self.mycursor.execute("SELECT * FROM {}".format(self.table_name))            
+            self.mycursor.execute("SELECT * FROM {} ".format(self.table_name))            
             return len(self.mycursor.fetchall())
         except:
             print("database connection failed")
@@ -155,12 +156,44 @@ class database:
             print("unstable internet connection restored")
             return False
 
+    def exportCSV(self):
+        self.mycursor.execute("SELECT * FROM {} ORDER BY CreatedOn DESC".format(self.table_name)) 
+        with open('exportedFromDB.csv', 'w', newline='') as file:
+            wr = csv.writer(file, dialect='excel')
+            for i in self.mycursor.fetchall():
+                wr.writerow(i)
+            return True
+
+    def importCSV(self):
+        self.clearTable()
+        try:
+            n=0
+            with open('exportedFromSheet.csv', 'r') as file:
+                csv_data = csv.reader(file, delimiter = ',')
+                for i in csv_data:
+                    if len(i) > 0:
+                        if n == 0:
+                            n+=1
+                        else:
+                            len(i)
+                            self.mycursor.execute(
+                                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), (i[0],i[1],i[2],i[3]))
+                            self.myDB.commit()
+                print("added to database successfully")
+                self.myDB.commit()
+                return True
+        except :
+            return False
+            
 
 if __name__ == "__main__":
     print("IN DATABASE")
-    # a = database(passphrase)
+    
+    # a = database('')
     # a.connectDB()
     # a.describeTable()
+    # a.exportCSV()
+    # a.importCSV()
     # a.clearTable()
     # print(a.getTotalID())
     # print(a.getLastID())
