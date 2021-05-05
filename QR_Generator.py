@@ -107,8 +107,9 @@ class qrGen:
 
 if __name__ == "__main__":
     a = qrGen()
-    for i in range(1103202105070001, 1103202105070100):   
-        i = str(i)
-        a.genQR(i, i[5:])
-        # break
-    a.printImagesInGrid(20210503001)
+    # for i in range(1103202105070001, 1103202105070100):   
+    #     i = str(i)
+    #     a.genQR(i, i[5:])
+    #     # break
+    a.printImagesInGrid(20210503001,202105030020)
+    pass
