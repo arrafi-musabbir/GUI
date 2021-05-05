@@ -100,8 +100,12 @@ class Ui_MainWindow(object):
     def confirmDeletation(self):
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Information)
-        msgBox.setText(
-            "This action is irreversible!\nDo you still want to proceed?")
+        if self.state == 'Main':
+            msgBox.setText(
+                "This action will delete the last entry and is irreversible!\nDo you still want to proceed?")
+        else:
+                msgBox.setText(
+                "This action will delete the last {} entries and is irreversible!\nDo you still want to proceed?".format(self.Xnumber))
         msgBox.setWindowTitle("Cleanup protocol")
         msgBox.setStandardButtons(
             QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
