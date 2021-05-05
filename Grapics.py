@@ -5,8 +5,6 @@ from datetime import datetime
 class grapics:
 
     def __init__(self, cw, cwd, sc):
-        # self.commDev = sc
-        # self.serial = 0
         self.centralwidget = cw
         self.cwd = cwd
         self.backGround()
@@ -18,10 +16,8 @@ class grapics:
         self.noCommWarning()
         self.internetConnection()
         self.noInternetWarning()
-        # self.invalidNumber()
         self.invalidSimWarning()
         self.duplicateSimWarning()
-        # self.initAnimation()
         self.currentNumber()
 
     def backGround(self):

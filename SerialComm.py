@@ -15,7 +15,6 @@ class commDev:
     def communicate(self, id):
         self.communication = 0
         try:
-            # self.auto_establish_comm()
             while self.commPort is not None:
                 if self.communication == 1:
                     break
@@ -30,14 +29,13 @@ class commDev:
                                 print("Device registered successfully")
                                 self.sc.timeout = 3
                                 self.communication = 1
-                                # self.sc.close()
-                                break
-                    # self.sc.timeout = 3
+                                return True
                 except UnicodeDecodeError:
-                    pass
-            # self.sc.close()       
+                    return False    
         except serial.serialutil.SerialException:
             print("Could not open port")
+            return False
+            
 
     def auto_establish_comm(self):
         self.find_com_port()
@@ -50,10 +48,13 @@ class commDev:
                 print("Establishing communication at port: ", self.connectedPort)
                 self.sc.timeout = 3
                 self.sc_state = 1
+                return True
             except serial.serialutil.SerialException:
                 self.close_device()
+                return False
         else: 
             self.connectedPort = None
+            return False
 
     def find_com_port(self):
         self.listPorts.clear()

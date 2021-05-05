@@ -307,9 +307,9 @@ class Ui_MainWindow(object):
                                 id_pass = self.genID.newID(nextID)
                                 Id, pswd = id_pass[0], id_pass[1]
                                 print("sending id", Id[4:])
-                                self.commDev.communicate(Id)
                                 time.sleep(1)
                                 if self.db.addNew(self.number, Id[4:], pswd, datetime.now()):
+                                    self.commDev.communicate(Id)
                                     self.qr.genQR(Id[4:], self.number)
                                     self.db_stored += 1
                                     print("Initiated in this session",
