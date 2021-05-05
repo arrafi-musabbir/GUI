@@ -113,7 +113,4 @@ if __name__ == "__main__":
     #     a.genQR(i, i[5:])
     #     # break
     # a.printImagesInGrid(202105030010,202105030020)
-    # a = '0192412414,131313'
-    # print(a.find(','))
-    # print(a.split(',')[1])
     pass

@@ -73,7 +73,7 @@ class database:
     def addNew(self, Sim, ID, Password, CreatedOn):
         try:
             self.mycursor.execute(
-                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), ("'"+str(Sim), "'"+str(ID), Password, CreatedOn))
+                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), ("R"+str(Sim), "I"+str(ID), Password, CreatedOn))
             self.myDB.commit()
             time.sleep(1)
             print("added to database successfully")
