@@ -554,5 +554,5 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
 
-    MainWindow.showNormal()
-    sys.exit(app.exec_())
+    MainWindow.showFullScreen()
+    ui.action_Exit(app.exec_())

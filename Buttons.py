@@ -220,13 +220,13 @@ class buttons:
     def delete_entries(self):  # delete a number of entries
         self.button10 = QtWidgets.QPushButton(self.centralwidget)
         self.button10.setGeometry(QtCore.QRect(
-            cg.button10_x, cg.button10_y, cg.button10_width, cg.button10_height))
+            cg.button1_x + 10, cg.button1_y - 50, cg.button6_width, cg.button6_height))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(self.cwd + "/" + cg.del_entries),
                        QtGui.QIcon.Active, QtGui.QIcon.On)
         self.button10.setIcon(icon)
         self.button10.setIconSize(QtCore.QSize(
-            cg.button10_width, cg.button10_height))
+            cg.button6_width+50, cg.button6_height+50))
         self.button10.setStyleSheet(
             "border-radius : 50; border : .1px solid black")
         self.button10.setCheckable(False)
@@ -237,13 +237,13 @@ class buttons:
     def delete_allEntries(self):  # delete all entries
         self.button11 = QtWidgets.QPushButton(self.centralwidget)
         self.button11.setGeometry(QtCore.QRect(
-            cg.button10_x, cg.button10_y + 150, cg.button10_width, cg.button10_height))
+            cg.button1_x + 10, cg.button1_y + 100, cg.button6_width, cg.button6_height))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(self.cwd + "/" +
                        cg.del_all_entries), QtGui.QIcon.Active, QtGui.QIcon.On)
         self.button11.setIcon(icon)
         self.button11.setIconSize(QtCore.QSize(
-            cg.button10_width, cg.button10_height))
+            cg.button6_width+50, cg.button6_height+50))
         self.button11.setStyleSheet(
             "border-radius : 50; border : .1px solid black")
         self.button11.setCheckable(False)
