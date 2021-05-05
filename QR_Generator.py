@@ -41,7 +41,7 @@ class qrGen:
         frame.paste(icon,(w+25,h+5))
         draw = ImageDraw.Draw(frame)
         font = ImageFont.truetype("Roboto-medium.ttf", 36)
-        draw.text((70, 457), 'ID: '+str(id) ,fill = (0, 0 , 0),font=font)
+        draw.text((70, 457), 'Sim: '+str(sim) ,fill = (0, 0 , 0),font=font)
         draw.rectangle([(30 ,15), (470, 455)], outline ="red", width=8)
         draw.rectangle([(0 ,-2), (505, 505)], outline ="black", width=8)
         self.qr_path = os.path.join(self.qrs_folder_path, (str(id) + ".png"))
@@ -56,11 +56,11 @@ class qrGen:
             os.mkdir("Print Ready QRs")
         except FileExistsError:
             pass
-        print(args)
         try:
             key2 = None
-            key1 = args[0][0]
-            key2 = args[1][1]
+            key1 = args[0]
+            key2 = args[1]
+            print(key1, key2)
         except IndexError:
             pass
         d = self.qrs_folder_path   
@@ -107,10 +107,10 @@ class qrGen:
             initial = str(int((qrs_path[i-1][-16:-4]))+1)
 
 if __name__ == "__main__":
-    # a = qrGen()
-    # for i in range(1103202105070001, 1103202105070100):   
-    #     i = str(i)
-    #     a.genQR(i, i[5:])
+    a = qrGen()
+    for i in range(1103202105070001, 1103202105070100):   
+        i = str(i)
+        a.genQR(i, i[5:])
     #     # break
-    # a.printImagesInGrid(202105030010,202105030020)
+    a.printImagesInGrid(202105070001, 202105070100)
     pass
