@@ -71,6 +71,7 @@ del_all_entries = "Grapics/delete_all_entry.png"
 del_entries = "Grapics/delete_entry.png"
 toSheet = "Grapics/toSheet.png"
 toSQL = "Grapics/toSQL.png"
+printQR = "Grapics/print_qr.png"
 
 key = 'lg747YarfwUIUdiMnjZKme1bTs8FW4Zwy-08slmVBPo='
 TABLE_NAME = 'init_devices'

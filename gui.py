@@ -67,6 +67,7 @@ class Ui_MainWindow(object):
         self.buttons.button11.clicked.connect(self.deleteAllentries)
         self.buttons.button12.clicked.connect(self.importTOsheet)
         self.buttons.button13.clicked.connect(self.importTOsql)
+        self.buttons.button14.clicked.connect(self.printQRs)
         # self.loadAnimation()
         # self.movie.start()
         # self.movie.stop()
@@ -180,6 +181,8 @@ class Ui_MainWindow(object):
             self.buttons.button13.setEnabled(False)
             self.buttons.button13.hide()
             self.grapics.currNumber.hide()
+            self.buttons.button14.hide()
+            self.buttons.button14.setEnabled(False)
         self.backgroundBlur("enable")
         self.buttons.button4.show()
         self.buttons.button4.setEnabled(True)
@@ -376,7 +379,6 @@ class Ui_MainWindow(object):
         self.loadDBsettings()
 
     def advancedDBsettings(self):
-        print('here')
         self.state = 'advancedDB'
         self.buttons.button4.show()
         self.buttons.button4.setEnabled(True)
@@ -388,6 +390,8 @@ class Ui_MainWindow(object):
         self.buttons.button12.setEnabled(True)
         self.buttons.button13.show()
         self.buttons.button13.setEnabled(True)
+        self.buttons.button14.show()
+        self.buttons.button14.setEnabled(True)
         self.grapics.currNumber.hide()
 
     def button5_click(self):
@@ -424,9 +428,13 @@ class Ui_MainWindow(object):
             self.buttons.button12.setEnabled(False)
             self.buttons.button13.hide()
             self.buttons.button13.setEnabled(False)
+            self.buttons.button14.hide()
+            self.buttons.button14.setEnabled(False)
             self.buttons.button5.hide()
             self.buttons.button5.setEnabled(False)
 
+    def printQRs(self):
+        pass
     
     def importTOsheet(self):
         if self.db.exportCSV():

@@ -20,6 +20,8 @@ class buttons:
         self.delete_entries()
         self.importTOsheet()
         self.importTOsql()
+        self.printQR()
+
 
 
     def pushbutton1(self):  # on - off
@@ -151,7 +153,7 @@ class buttons:
     def importTOsheet(self):  # export to sheet
         self.button12 = QtWidgets.QPushButton(self.centralwidget)
         self.button12.setGeometry(QtCore.QRect(
-            cg.button1_x + 10, cg.button1_y - 50, cg.button6_width, cg.button6_height))
+            cg.button1_x + 10, cg.button1_y - 130, cg.button6_width, cg.button6_height))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(self.cwd + "/" + cg.toSheet),
                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -168,7 +170,7 @@ class buttons:
     def importTOsql(self):  # export to sql
         self.button13 = QtWidgets.QPushButton(self.centralwidget)
         self.button13.setGeometry(QtCore.QRect(
-            cg.button1_x + 10, cg.button1_y + 100, cg.button6_width, cg.button6_height))
+            cg.button1_x + 10, cg.button1_y +5 , cg.button6_width, cg.button6_height))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(self.cwd + "/" + cg.toSQL),
                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -181,6 +183,23 @@ class buttons:
         self.button13.setEnabled(False)
         self.button13.hide()
         self.button13.setObjectName("changeCommPort")
+
+    def printQR(self):  # export to sql
+        self.button14 = QtWidgets.QPushButton(self.centralwidget)
+        self.button14.setGeometry(QtCore.QRect(
+            cg.button1_x + 10, cg.button1_y + 150, cg.button6_width, cg.button6_height))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(self.cwd + "/" + cg.printQR),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.button14.setIcon(icon)
+        self.button14.setStyleSheet(
+            "border-radius : 50; border : .1px solid black")
+        self.button14.setIconSize(QtCore.QSize(
+            cg.button6_width, cg.button6_height))
+        self.button14.setCheckable(False)
+        self.button14.setEnabled(False)
+        self.button14.hide()
+        self.button14.setObjectName("changeCommPort")
 
     def reconnectServer(self):  # reconnect server
         self.button9 = QtWidgets.QPushButton(self.centralwidget)
