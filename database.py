@@ -193,7 +193,7 @@ class database:
 
 if __name__ == "__main__":
     print("IN DATABASE")
-    a = database('alphadeltafoxtrot')
+    a = database('')
     # a.connectDB()
     # # a.describeTable()
     # a.exportCSV()
