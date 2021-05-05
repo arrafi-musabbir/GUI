@@ -148,6 +148,14 @@ class Ui_MainWindow(object):
             self.goto_settings()
         elif self.state == "initiate":
             self.loadMain()
+        elif self.state == "dbSettingsinfo":
+            self.loadDBsettings()
+        elif self.state == "info":
+            self.goto_settings()
+        elif self.state == 'advancedDBinfo':
+            self.advancedDBsettings()
+        elif self.state == 'advancedDB':
+            self.goto_settings()
         else:
             # print("Going offline")
             # time.sleep(1)
@@ -246,7 +254,9 @@ class Ui_MainWindow(object):
         self.buttons.button11.show()
         self.buttons.button11.setEnabled(True)
         self.grapics.currNumber.hide()
-
+        self.buttons.button5.show()
+        self.buttons.button5.setEnabled(True)
+        
     def loadRegistration(self):
         self.state = "initiate"
         self.backgroundBlur("enable")
@@ -386,6 +396,8 @@ class Ui_MainWindow(object):
         self.state = 'advancedDB'
         self.buttons.button4.show()
         self.buttons.button4.setEnabled(True)
+        self.buttons.button5.show()
+        self.buttons.button5.setEnabled(True)
         self.buttons.button6.hide()
         self.buttons.button6.setEnabled(False)
         self.buttons.button7.hide()
@@ -439,11 +451,13 @@ class Ui_MainWindow(object):
 
     def printQRs(self):
         val = self.takeIDinput()
-        if len(val)>1:
+        if type(val) == tuple:
             self.qr.printImagesInGrid(self.key1,self.key2)
-        else:
+        elif type(val) == str:
             self.qr.printImagesInGrid(self.key1)
-    
+        else:
+            pass
+        
     def takeIDinput(self):
         ID, ok = QtWidgets.QInputDialog.getText(
             self.centralwidget, 'ID NUMBER', 'Enter ID:')

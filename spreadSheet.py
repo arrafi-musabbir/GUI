@@ -3,10 +3,16 @@ import os
 import gspread
 from google.auth.exceptions import TransportError
 import csv
+from datetime import datetime
 
 class spreadSheet:
 
     def __init__(self):
+        try:
+            os.makedirs('CSVs')
+        except FileExistsError:
+            pass
+        self.csv_path = os.path.join(os.getcwd(),'CSVs')
         self.connectSheet()
 
     def connectSheet(self):
@@ -28,7 +34,7 @@ class spreadSheet:
             sheet = self.sheet.sheet1
             s = sheet.get_all_values()
             # print(s)
-            with open('exportedFromSheet.csv', 'w', newline='') as file:
+            with open(os.path.join(self.csv_path,'exportedFromSheet_{}.csv'.format(datetime.today().strftime('%d %b %Y'))), 'w', newline='') as file:
                 wr = csv.writer(file, dialect='excel')
                 wr.writerows(s)  
                 return True
@@ -37,14 +43,14 @@ class spreadSheet:
 
     def importCSV(self):
         try:
-            content = open('exportedFromDB.csv', 'r').read()
+            content = open(os.path.join(self.csv_path,'exportedFromDB_{}.csv'.format(datetime.today().strftime('%d %b %Y'))), 'r').read()
             self.client.import_csv(self.sheet.id, content)
             return True
         except:
             return False
 
 if __name__ == "__main__":
-    # a = spreadSheet()
-    # # a.importCSV()
-    # a.exportCSV()
+    a = spreadSheet()
+    # print(a.importCSV())
+    a.exportCSV()
     pass

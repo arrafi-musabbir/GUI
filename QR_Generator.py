@@ -28,7 +28,7 @@ class qrGen:
         img.convert("RGBA")
         img = img.resize((450,450))
         
-        icon = Image.open(os.path.join(os.getcwd(),'DMA_LOGO.png'))
+        icon = Image.open(os.path.join(os.getcwd(),'Grapics//DMA_LOGO.png'))
         img_w, img_h = img.size
         icon_w, icon_h = 180, 75
         icon = icon.resize((icon_w, icon_h))
@@ -40,14 +40,13 @@ class qrGen:
         frame.paste(icon,(w+25,h+5))
         draw = ImageDraw.Draw(frame)
         font = ImageFont.truetype("Roboto-medium.ttf", 36)
-        draw.text((70, 457), 'Sim: '+str(sim) ,fill = (0, 0 , 0),font=font)
+        draw.text((100, 457), 'Sim: '+str(sim) ,fill = (0, 0 , 0),font=font)
         draw.rectangle([(30 ,15), (470, 455)], outline ="red", width=8)
         draw.rectangle([(0 ,-2), (505, 505)], outline ="black", width=8)
-        self.qr_path = os.path.join(self.qrs_folder_path, (str(sim) + ".png"))
+        self.qr_path = os.path.join(self.qrs_folder_path, (str(id) + ".png"))
         frame.save(self.qr_path, dpi= (500,500))
 
     def printQRCode(self):
-        print(self.qr_path)
         os.startfile(self.qr_path, 'print')
 
     def printImagesInGrid(self, *args):
@@ -59,7 +58,6 @@ class qrGen:
             key2 = None
             key1 = args[0]
             key2 = args[1]
-            print(key1, key2)
         except IndexError:
             pass
         d = self.qrs_folder_path   
@@ -67,49 +65,53 @@ class qrGen:
         while True:
             i = 0
             for path in sorted(os.listdir(d), key=len):
-                if key2 is None:
-                    if (int(path[4:4+len(str(key1))]) == int(key1)):
-                        qrs_path.append(os.path.join(self.qrs_folder_path,path))
-                        i += 1
-                else:
-                    if (int(path[4:4+len(str(key1))]) >= int(key1)) & (int(path[4:4+len(str(key2))]) <= int(key2)):
+                try:
+                    if key2 is None:
+                        if (int(path[4:4+len(str(key1))]) == int(key1)):
                             qrs_path.append(os.path.join(self.qrs_folder_path,path))
                             i += 1
+                    else:
+                        if (int(path[4:4+len(str(key1))]) >= int(key1)) & (int(path[4:4+len(str(key2))]) <= int(key2)):
+                                qrs_path.append(os.path.join(self.qrs_folder_path,path))
+                                i += 1
+                except ValueError:
+                    print("")
+                    pass
             break
         imgs = list()
         for i in qrs_path:
             img = Image.open(i)
             imgs.append(img)
-        del path
         pages = (len(imgs)-1)//24+1
         i = 0
         if len(qrs_path)!= 0:
             initial = (qrs_path[i][-16:-4])
-
-        for n in range(pages):
-            gridImg = Image.new('RGB', (2000, 3000), 'white')   
-            currX = 500
-            currY = 500
-            for row in range(6):
-                for col in range(4):
-                    try:
-                        gridImg.paste(imgs[i], (col*currX, row*currY))
-                        i += 1
-                        if isinstance((i/24), int):
+            for n in range(pages):
+                gridImg = Image.new('RGB', (2000, 3000), 'white')   
+                currX = 500
+                currY = 500
+                for row in range(6):
+                    for col in range(4):
+                        try:
+                            gridImg.paste(imgs[i], (col*currX, row*currY))
+                            i += 1
+                            if isinstance((i/24), int):
+                                break
+                        except IndexError:
                             break
-                    except IndexError:
-                        break
-            path = os.path.join(os.getcwd(), "Print Ready QRs")
-            final = (qrs_path[i-1][-16:-4])
-            print("From ID:{} to ID:{} added to {}.pdf and ready to print".format(initial, final, initial+' >> '+final))
-            gridImg.save(path+'//'+initial+' - '+final+'.png', dpi= (500, 500))
-            initial = str(int((qrs_path[i-1][-16:-4]))+1)
+                path = os.path.join(os.getcwd(), "Print Ready QRs")
+                final = (qrs_path[i-1][-16:-4])
+                print("From ID:{} to ID:{} to be printed as {}.png".format(initial, final, initial+'-'+final))
+                gridImg.save(path+'//'+initial+'_'+final+'.png', dpi= (500, 500))
+                initial = str(int((qrs_path[i-1][-16:-4]))+1)
+        else:
+            print("QR codes from ID {} not found".format(key1))
+            print("couldn't complete print protocol")
 
 if __name__ == "__main__":
-    # a = qrGen()
+    a = qrGen()
     # for i in range(1103202105070001, 1103202105070100):   
     #     i = str(i)
     #     a.genQR(i, i[5:])
-    # #     # break
-    # a.printImagesInGrid(202105070001, 202105070100)
+    a.printImagesInGrid(2021)
     pass

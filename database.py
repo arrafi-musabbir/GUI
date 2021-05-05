@@ -14,6 +14,11 @@ import csv
 class database:
 
     def __init__(self, *args):
+        try:
+            os.makedirs('CSVs')
+        except FileExistsError:
+            pass
+        self.csv_path = os.path.join(os.getcwd(),'CSVs')
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
@@ -25,6 +30,7 @@ class database:
             self.server = 'remote'
             self.serverINFO = PasswordManager(args[0]).retrieveServerCredentials()
         self.connectDB()
+        
         
     # establish connection to database
     def connectDB(self):
@@ -156,7 +162,7 @@ class database:
 
     def exportCSV(self):
         self.mycursor.execute("SELECT * FROM {} ORDER BY CreatedOn DESC".format(self.table_name)) 
-        with open('exportedFromDB.csv', 'w', newline='') as file:
+        with open(os.path.join(self.csv_path,'exportedFromDB_{}.csv'.format(datetime.today().strftime('%d %b %Y'))), 'w', newline='') as file:
             wr = csv.writer(file, dialect='excel')
             for i in self.mycursor.fetchall():
                 wr.writerow(i)
@@ -166,7 +172,7 @@ class database:
         self.clearTable()
         try:
             n=0
-            with open('exportedFromSheet.csv', 'r') as file:
+            with open(os.path.join(self.csv_path,'exportedFromSheet_{}.csv'.format(datetime.today().strftime('%d %b %Y'))), 'r') as file:
                 csv_data = csv.reader(file, delimiter = ',')
                 for i in csv_data:
                     if len(i) > 0:
@@ -186,12 +192,11 @@ class database:
 
 if __name__ == "__main__":
     print("IN DATABASE")
-    
-    # a = database('')
+    a = database('alphadeltafoxtrot')
     # a.connectDB()
     # # a.describeTable()
-    # # a.exportCSV()
-    # # a.importCSV()
+    # a.exportCSV()
+    a.importCSV()
     # # a.clearTable()
     # # print(a.getTotalID())
     # print(a.getLastID())
