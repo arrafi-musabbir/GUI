@@ -16,7 +16,6 @@ class qrGen:
         
 
     def genQR(self, id, sim):
-        
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -107,10 +106,10 @@ class qrGen:
             initial = str(int((qrs_path[i-1][-16:-4]))+1)
 
 if __name__ == "__main__":
-    a = qrGen()
-    for i in range(1103202105070001, 1103202105070100):   
-        i = str(i)
-        a.genQR(i, i[5:])
-    #     # break
-    a.printImagesInGrid(202105070001, 202105070100)
+    # a = qrGen()
+    # for i in range(1103202105070001, 1103202105070100):   
+    #     i = str(i)
+    #     a.genQR(i, i[5:])
+    # #     # break
+    # a.printImagesInGrid(202105070001, 202105070100)
     pass

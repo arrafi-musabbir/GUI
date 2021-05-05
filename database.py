@@ -133,10 +133,9 @@ class database:
 
     # get last registered ID of current date
     def getLastID(self):
-
         self.mycursor.execute("SELECT ID FROM {} ORDER BY CreatedOn DESC LIMIT 1".format(self.table_name))
         lastidYMD = self.mycursor.fetchall()[0][0]
-        if lastidYMD[4:12] != datetime.today().strftime("%Y%m%d"):
+        if lastidYMD[-12:-4] != datetime.today().strftime("%Y%m%d"):
             return 0
         else:
             return int(lastidYMD[-4:])
@@ -188,12 +187,12 @@ class database:
 if __name__ == "__main__":
     print("IN DATABASE")
     
-    # a = database('')
+    # a = database('alphadeltafoxtrot')
     # a.connectDB()
-    # a.describeTable()
-    # a.exportCSV()
-    # a.importCSV()
-    # a.clearTable()
-    # print(a.getTotalID())
+    # # a.describeTable()
+    # # a.exportCSV()
+    # # a.importCSV()
+    # # a.clearTable()
+    # # print(a.getTotalID())
     # print(a.getLastID())
     # a.disconnect()

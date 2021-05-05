@@ -144,27 +144,6 @@ class grapics:
         self.selectedPort.hide()
         self.selectedPort.adjustSize()
 
-    def availablePorts(self):
-
-        self.ports = self.commDev.find_com_port()
-        self.showPorts = QtWidgets.QLabel(self.centralwidget)
-        self.showPorts.setGeometry(QtCore.QRect(
-            cg.width // 2.3, cg.height // 2.3,  cg.button6_width, cg.button6_height))
-        font = QtGui.QFont()
-        font.setFamily("Microsoft Tai Le")
-        font.setPointSize(24)
-        font.setBold(True)
-        font.setWeight(75)
-        self.showPorts.setFont(font)
-        self.showPorts.setStyleSheet("color:rgb(255, 255, 255)")
-        self.showPorts.setText("AVAILABLE PORTS:\n" + str(self.ports).upper())
-        self.showPorts.setAlignment(QtCore.Qt.AlignCenter)
-        if self.ports is None:
-            self.showPorts.setText("AVAILABLE PORTS:\n" + " " + "NONE")
-        self.showPorts.adjustSize()
-        self.showPorts.hide()
-        self.showPorts.setObjectName("showPorts")
-
     def portIndiCator(self):
 
         self.portIndicator = QtWidgets.QLabel(self.centralwidget)

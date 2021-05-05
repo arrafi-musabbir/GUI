@@ -309,37 +309,37 @@ class Ui_MainWindow(object):
                                 print("sending id", Id[4:])
                                 time.sleep(1)
                                 if self.db.addNew(self.number, Id[4:], pswd, datetime.now()):
-                                    self.commDev.communicate(Id)
-                                    self.qr.genQR(Id[4:], self.number)
-                                    self.db_stored += 1
-                                    print("Initiated in this session",
-                                          self.db_stored)
-                                    self.commDev.communication = 1
+                                    if self.commDev.communicate(Id):
+                                        self.qr.genQR(Id[4:], self.number)
+                                        self.db_stored += 1
+                                        print("Initiated in this session",
+                                            self.db_stored)
+                                        self.commDev.communication = 1
+                                    else:
+                                        print("couldn't communicate with device")
+                                        print('Reverting back the changes made')
+                                        self.db.clearEntries(1)
+                                        self.grapics.noCommmsg.show()
                                 else:
                                     print("Duplicate mobile number")
                                     self.commDev.communication = 0
                                     self.commDev.flush_device()
                                     self.commDev.close_device()
                                     self.grapics.dupSimmsg.show()
-                                    # self.loadMain()
                                     break
                             self.commDev.close_device()
                         else:
                             self.grapics.noCommmsg.show()
                         if self.commDev.communication == 1:
                             self.online()
-
-                        # self.loadMain()
                         break
                     else:
                         self.connectServer()
                         self.grapics.noInternetmsg.show()
-                        # self.loadMain()
                         break
                 else:
                     print("invalid number")
                     self.grapics.invSimmsg.show()
-                    # self.loadMain()
                     break
             else:
                 break
@@ -347,7 +347,6 @@ class Ui_MainWindow(object):
         self.loadRegistrationAgain()
 
     def button2_click(self):
-        # self.grapics.click_to.adjustSize()
         if self.confirmDeletation():
             if self.db_state == 1:
                 if self.connectServer():

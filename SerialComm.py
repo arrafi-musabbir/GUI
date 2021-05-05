@@ -67,7 +67,7 @@ class commDev:
                 self.listPorts.remove('/dev/ttyAMA0')
             except ValueError:
                 pass
-            print(self.listPorts)
+            print("Comm ports found:",self.listPorts)
             if len(self.listPorts) > 0:
                 self.commPort = self.listPorts[0]
                 return self.listPorts
@@ -92,7 +92,7 @@ class commDev:
             print("Serial port not connected properly/ serial port not responding")
 
 if __name__ == "__main__":
-    # a = commDev()
+    a = commDev()
     # a.find_com_port()
     # a.auto_establish_comm()
     # a.sc.flush()
