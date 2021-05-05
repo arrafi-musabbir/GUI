@@ -93,7 +93,7 @@ class buttons:
         self.button4.hide()
         self.button4.setObjectName("go back")
 
-    def pushbutton5(self):  # show credits
+    def pushbutton5(self):  # show device registrinformations
         self.button5 = QtWidgets.QPushButton(self.centralwidget)
         self.button5.setGeometry(QtCore.QRect(
             cg.button3_x, cg.button3_y, cg.button2_width, cg.button2_height))

@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import config as cg
-
+from datetime import datetime
 
 class grapics:
 
@@ -22,7 +22,7 @@ class grapics:
         self.invalidSimWarning()
         self.duplicateSimWarning()
         # self.initAnimation()
-        # self.currentNumber()
+        self.currentNumber()
 
     def backGround(self):
         self.background = QtWidgets.QLabel(self.centralwidget)
@@ -178,7 +178,7 @@ class grapics:
         self.portIndicator.setScaledContents(True)
         self.portIndicator.setObjectName("portIndicator")
 
-    def showCredits(self):
+    def showInfos(self):
 
         self.credits = QtWidgets.QLabel(self.centralwidget)
         self.credits.setGeometry(QtCore.QRect(
@@ -239,21 +239,24 @@ class grapics:
         self.dupSimmsg.setDetailedText(
             "Can't initiate device: You have already used this sim once to initiate a device. Input a new sim number and try again")
 
-    def currentNumber(self, curr):
+    def currentNumber(self, *curr):
 
         self.currNumber = QtWidgets.QLabel(self.centralwidget)
-        self.currNumber.setGeometry(QtCore.QRect(600, 775, 11, 40))
+        self.currNumber.setGeometry(QtCore.QRect(340, 280, 11, 40))
         font = QtGui.QFont()
-        font.setFamily("Microsoft YaHei UI")
+        font.setFamily("Roboto")
         font.setPointSize(24)
         font.setBold(True)
         font.setWeight(60)
-        text = "Number of devices initiated in current session: " + str(curr)
-        self.currNumber.setText(text)
-        self.currNumber.setFont(font)
-        self.currNumber.setStyleSheet("color:rgb(255, 255, 255)")
-        self.currNumber.setScaledContents(True)
-        self.currNumber.setObjectName("currSession")
-        self.currNumber.setAlignment(QtCore.Qt.AlignCenter)
-        self.currNumber.adjustSize()
-        self.currNumber.hide()
+        try:
+            text = "Today: {}".format(datetime.today().strftime("%d-%B-%Y"))+"\n\nNumber of devices initiated in current session: " + str(curr[0]) + "\n\nTotal Number of devices initiated today: " + str(curr[1]) + "\n\nTotal Number of devices initiated till today: " + str(curr[2])
+            self.currNumber.setText(text)
+            self.currNumber.setFont(font)
+            self.currNumber.setStyleSheet("color:rgb(255, 255, 255)")
+            self.currNumber.setScaledContents(True)
+            self.currNumber.setObjectName("currSession")
+            self.currNumber.setAlignment(QtCore.Qt.AlignCenter)
+            self.currNumber.adjustSize()
+            self.currNumber.hide()
+        except:
+            pass

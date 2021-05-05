@@ -166,8 +166,9 @@ class Ui_MainWindow(object):
             self.grapics.currNumber.hide()
             self.buttons.button11.hide()
             # self.grapics.click_to.hide()
-        elif self.state == "credits":
+        elif self.state == "info":
             self.grapics.credits.hide()
+            self.grapics.currNumber.hide()
         self.backgroundBlur("enable")
         self.buttons.button4.show()
         self.buttons.button4.setEnabled(True)
@@ -217,8 +218,6 @@ class Ui_MainWindow(object):
         # self.actionSwitch.activated.connect(self.action_Switch)
         self.buttons.button4.show()
         self.buttons.button4.setEnabled(True)
-        self.buttons.button5.hide()
-        self.buttons.button5.setEnabled(False)
         self.buttons.button6.hide()
         self.buttons.button6.setEnabled(False)
         self.buttons.button7.hide()
@@ -227,8 +226,7 @@ class Ui_MainWindow(object):
         self.buttons.button10.setEnabled(True)
         self.buttons.button11.show()
         self.buttons.button11.setEnabled(True)
-        self.grapics.currentNumber(self.db_stored)
-        self.grapics.currNumber.show()
+        self.grapics.currNumber.hide()
 
     def loadRegistration(self):
         self.state = "initiate"
@@ -352,26 +350,43 @@ class Ui_MainWindow(object):
             self.loadMain()
         elif self.state == "dbSettings":
             self.goto_settings()
-        elif self.state == "credits":
+        elif self.state == "info":
             self.goto_settings()
         elif self.state == "initiate":
             self.loadMain()
+        elif self.state == "dbSettingsinfo":
+            self.loadDBsettings()
 
     def button6_click(self):
         self.loadDBsettings()
 
     def button5_click(self):
-        self.state = "credits"
-        self.buttons.button4.show()
-        self.buttons.button4.setEnabled(True)
-        self.buttons.button5.hide()
-        self.buttons.button5.setEnabled(False)
-        self.buttons.button6.hide()
-        self.buttons.button6.setEnabled(False)
-        self.buttons.button7.hide()
-        self.buttons.button7.setEnabled(False)
-        self.grapics.showCredits()
-        self.grapics.credits.show()
+        self.grapics.currentNumber(self.db_stored, self.db.getLastID(), self.db.getTotalID())
+        self.grapics.currNumber.show()
+        if self.state == "dbSettings":
+            self.state = "dbSettingsinfo"
+            self.buttons.button4.show()
+            self.buttons.button4.setEnabled(True)
+            self.buttons.button6.hide()
+            self.buttons.button6.setEnabled(False)
+            self.buttons.button7.hide()
+            self.buttons.button7.setEnabled(False)
+            self.buttons.button10.hide()
+            self.buttons.button10.setEnabled(False)
+            self.buttons.button11.hide()
+            self.buttons.button11.setEnabled(False)
+        elif self.state == 'Settings':
+            self.state = "info"
+            self.buttons.button4.show()
+            self.buttons.button4.setEnabled(True)
+            self.buttons.button5.hide()
+            self.buttons.button5.setEnabled(False)
+            self.buttons.button6.hide()
+            self.buttons.button6.setEnabled(False)
+            self.buttons.button7.hide()
+            self.buttons.button7.setEnabled(False)
+            self.grapics.showInfos()
+        
 
     def takeXentries(self):
         Number, ok = QtWidgets.QInputDialog.getText(
