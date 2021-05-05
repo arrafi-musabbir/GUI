@@ -6,8 +6,9 @@
 width = 1366
 height = 766
 
-window_x = (1920 - width) // 2
-window_y = (1080 - height) // 2
+# window_x = (1920 - width) // 2
+# window_y = (1080 - height) // 2
+window_x, window_y = 0,0
 
 
 button1_width, button1_height = 120, 120

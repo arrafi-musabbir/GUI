@@ -10,6 +10,6 @@ if __name__ == "__main__":
         ui.setupUi(MainWindow, sys.argv[1])
     else:
         ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+    MainWindow.showFullScreen()
+    ui.action_Exit(app.exec_())
     

@@ -12,14 +12,15 @@ from datetime import datetime
 from QR_Generator import qrGen
 from spreadSheet import spreadSheet
 import webbrowser
+import pyautogui
 
 class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow, *args):
 
         MainWindow.setObjectName("MainWindow")
-
-        MainWindow.setGeometry(cg.window_x, cg.window_y, cg.width, cg.height)
+        width, height = pyautogui.size()
+        MainWindow.setGeometry(0, 0, width, height)
         MainWindow.setEnabled(True)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -134,7 +135,7 @@ class Ui_MainWindow(object):
         elif self.state == "initiate":
             self.init_device()
 
-    def action_Exit(self):
+    def action_Exit(self,*args):
         if self.state == "Settings":
             self.loadMain()
         elif self.state == "dbSettings":
@@ -147,9 +148,9 @@ class Ui_MainWindow(object):
             # print("Going offline")
             # time.sleep(1)
             self.db.disconnect()
+            self.commDev.close_device()
             # self.offline()
             print("Exiting...")
-            time.sleep(1)
             # print("...")
             sys.exit()
 

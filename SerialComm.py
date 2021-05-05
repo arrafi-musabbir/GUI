@@ -51,7 +51,7 @@ class commDev:
                 self.sc.timeout = 3
                 self.sc_state = 1
             except serial.serialutil.SerialException:
-                self.sc.close()
+                self.close_device()
         else: 
             self.connectedPort = None
 
@@ -83,15 +83,20 @@ class commDev:
         self.sc.flush()
         
     def close_device(self):
-        print("device closed")
-        self.sc.close()
+        try:
+            self.sc.close()
+            print("device closed")
+        except AttributeError:
+            print("Tried closing all connected serial devices")
+            print("Serial port not connected properly/ serial port not responding")
 
 if __name__ == "__main__":
-    a = commDev()
-    a.find_com_port()
-    a.auto_establish_comm()
-    a.sc.flush()
+    # a = commDev()
+    # a.find_com_port()
+    # a.auto_establish_comm()
+    # a.sc.flush()
     # a.communicate('12345678901234567890')
     # p = str(11111111111111111111).encode()
     # print(len(p))
     # print(p)
+    pass
