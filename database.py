@@ -30,7 +30,6 @@ class database:
     def connectDB(self):
         if self.server == 'remote' :
             try:
-                serverINFO = self.serverINFO
                 self.tunnel = SSHTunnelForwarder((self.serverINFO['SSH_HOST'], int(self.serverINFO['SSH_PORT'])), 
                                             ssh_password=self.serverINFO['SSH_PSWD'], 
                                             ssh_username=self.serverINFO['SSH_USER'], 
@@ -42,7 +41,7 @@ class database:
                     user=self.serverINFO['DB_USER'],
                     password=self.serverINFO['DB_PSWD'],
                     database=self.serverINFO['DB_NAME'])
-                self.table_name = self.serverINFO['DB_TABLE_NAME']
+                self.table_name = 'init_devices'
                 self.db_state = 1
                 self.mycursor = self.myDB.cursor()
                 print("Remote server connection established successfully")

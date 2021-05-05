@@ -44,7 +44,7 @@ class qrGen:
         draw.text((70, 457), 'Sim: '+str(sim) ,fill = (0, 0 , 0),font=font)
         draw.rectangle([(30 ,15), (470, 455)], outline ="red", width=8)
         draw.rectangle([(0 ,-2), (505, 505)], outline ="black", width=8)
-        self.qr_path = os.path.join(self.qrs_folder_path, (str(id) + ".png"))
+        self.qr_path = os.path.join(self.qrs_folder_path, (str(sim) + ".png"))
         frame.save(self.qr_path, dpi= (500,500))
 
     def printQRCode(self):
