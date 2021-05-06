@@ -14,6 +14,7 @@ from spreadSheet import spreadSheet
 import webbrowser
 import pyautogui
 
+
 class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow, *args):
@@ -104,7 +105,7 @@ class Ui_MainWindow(object):
             msgBox.setText(
                 "This action will delete the last entry and is irreversible!\nDo you still want to proceed?")
         else:
-                msgBox.setText(
+            msgBox.setText(
                 "This action will delete the last {} entries and is irreversible!\nDo you still want to proceed?".format(self.Xnumber))
         msgBox.setWindowTitle("Cleanup protocol")
         msgBox.setStandardButtons(
@@ -139,7 +140,7 @@ class Ui_MainWindow(object):
         elif self.state == "initiate":
             self.init_device()
 
-    def action_Exit(self,*args):
+    def action_Exit(self, *args):
         if self.state == "Settings":
             self.loadMain()
         elif self.state == "dbSettings":
@@ -256,7 +257,7 @@ class Ui_MainWindow(object):
         self.grapics.currNumber.hide()
         self.buttons.button5.show()
         self.buttons.button5.setEnabled(True)
-        
+
     def loadRegistration(self):
         self.state = "initiate"
         self.backgroundBlur("enable")
@@ -327,7 +328,7 @@ class Ui_MainWindow(object):
                                         self.qr.genQR(Id[4:], self.number)
                                         self.db_stored += 1
                                         print("Initiated in this session",
-                                            self.db_stored)
+                                              self.db_stored)
                                         self.commDev.communication = 1
                                     else:
                                         print("couldn't communicate with device")
@@ -388,7 +389,7 @@ class Ui_MainWindow(object):
             self.goto_settings()
         elif self.state == 'advancedDBinfo':
             self.advancedDBsettings()
-            
+
     def button6_click(self):
         self.loadDBsettings()
 
@@ -411,7 +412,8 @@ class Ui_MainWindow(object):
         self.grapics.currNumber.hide()
 
     def button5_click(self):
-        self.grapics.currentNumber(self.db_stored, self.db.getLastID(), self.db.getTotalID())
+        self.grapics.currentNumber(
+            self.db_stored, self.db.getLastID(), self.db.getTotalID())
         self.grapics.currNumber.show()
         if self.state == "dbSettings":
             self.state = "dbSettingsinfo"
@@ -452,12 +454,12 @@ class Ui_MainWindow(object):
     def printQRs(self):
         val = self.takeIDinput()
         if type(val) == tuple:
-            self.qr.printImagesInGrid(self.key1,self.key2)
+            self.qr.printImagesInGrid(self.key1, self.key2)
         elif type(val) == str:
             self.qr.printImagesInGrid(self.key1)
         else:
             pass
-        
+
     def takeIDinput(self):
         ID, ok = QtWidgets.QInputDialog.getText(
             self.centralwidget, 'ID NUMBER', 'Enter ID:')
@@ -474,12 +476,13 @@ class Ui_MainWindow(object):
                 pass
         else:
             return False
-    
+
     def importTOsheet(self):
         if self.db.exportCSV():
             if self.sheet.importCSV():
-                webbrowser.open('https://docs.google.com/spreadsheets/d/1nA-FiYo_6NwNOVBExcAjzEDG7Bk5jFFo8eDTMKjhAFw/edit?usp=sharing', new=1)
-        
+                webbrowser.open(
+                    'https://docs.google.com/spreadsheets/d/1nA-FiYo_6NwNOVBExcAjzEDG7Bk5jFFo8eDTMKjhAFw/edit?usp=sharing', new=1)
+
     def importTOsql(self):
         if self.sheet.exportCSV():
             if self.db.importCSV():
@@ -507,7 +510,8 @@ class Ui_MainWindow(object):
         if self.confirmAllDeletation():
             self.db.clearEntries(self.db_stored)
             self.db_stored = 0
-            text = "Number of devices initiated in current session: " + str(self.db_stored)
+            text = "Number of devices initiated in current session: " + \
+                str(self.db_stored)
             self.grapics.currNumber.setText(text)
 
     def online(self):

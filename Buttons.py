@@ -22,8 +22,6 @@ class buttons:
         self.importTOsql()
         self.printQR()
 
-
-
     def pushbutton1(self):  # on - off
         self.button1 = QtWidgets.QPushButton(self.centralwidget)
         self.button1.setGeometry(QtCore.QRect(
@@ -170,7 +168,7 @@ class buttons:
     def importTOsql(self):  # export to sql
         self.button13 = QtWidgets.QPushButton(self.centralwidget)
         self.button13.setGeometry(QtCore.QRect(
-            cg.button1_x + 10, cg.button1_y +5 , cg.button6_width, cg.button6_height))
+            cg.button1_x + 10, cg.button1_y + 5, cg.button6_width, cg.button6_height))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(self.cwd + "/" + cg.toSQL),
                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -226,7 +224,7 @@ class buttons:
                        QtGui.QIcon.Active, QtGui.QIcon.On)
         self.button10.setIcon(icon)
         self.button10.setIconSize(QtCore.QSize(
-            cg.button6_width+50, cg.button6_height+50))
+            cg.button6_width + 50, cg.button6_height + 50))
         self.button10.setStyleSheet(
             "border-radius : 50; border : .1px solid black")
         self.button10.setCheckable(False)
@@ -243,7 +241,7 @@ class buttons:
                        cg.del_all_entries), QtGui.QIcon.Active, QtGui.QIcon.On)
         self.button11.setIcon(icon)
         self.button11.setIconSize(QtCore.QSize(
-            cg.button6_width+50, cg.button6_height+50))
+            cg.button6_width + 50, cg.button6_height + 50))
         self.button11.setStyleSheet(
             "border-radius : 50; border : .1px solid black")
         self.button11.setCheckable(False)

@@ -3,7 +3,8 @@ import os
 import image
 from PIL import Image
 from PIL import ImageFont
-from PIL import ImageDraw 
+from PIL import ImageDraw
+
 
 class qrGen:
 
@@ -13,7 +14,6 @@ class qrGen:
             os.mkdir(self.qrs_folder_path)
         except FileExistsError:
             pass
-        
 
     def genQR(self, id, sim):
         qr = qrcode.QRCode(
@@ -22,29 +22,30 @@ class qrGen:
             box_size=10,
             border=4,
         )
-        qr.add_data('Device ID: ' + str(id) + '\n' + "Sim number: " + str(sim)+ "\nPowered by: Datasoft Manufacturing & Asssembly")
+        qr.add_data('Device ID: ' + str(id) + '\n' + "Sim number: " +
+                    str(sim) + "\nPowered by: Datasoft Manufacturing & Asssembly")
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
         img.convert("RGBA")
-        img = img.resize((450,450))
-        
-        icon = Image.open(os.path.join(os.getcwd(),'Grapics//DMA_LOGO.png'))
+        img = img.resize((450, 450))
+
+        icon = Image.open(os.path.join(os.getcwd(), 'Grapics//DMA_LOGO.png'))
         img_w, img_h = img.size
         icon_w, icon_h = 180, 75
         icon = icon.resize((icon_w, icon_h))
         w = int((img_w - icon_w) / 2)
         h = int((img_h - icon_h) / 2)
-        
+
         frame = Image.new('RGBA', (500, 500), 'white')
-        frame.paste(img,(25,10))
-        frame.paste(icon,(w+25,h+5))
+        frame.paste(img, (25, 10))
+        frame.paste(icon, (w + 25, h + 5))
         draw = ImageDraw.Draw(frame)
         font = ImageFont.truetype("Roboto-medium.ttf", 36)
-        draw.text((100, 457), 'Sim: '+str(sim) ,fill = (0, 0 , 0),font=font)
-        draw.rectangle([(30 ,15), (470, 455)], outline ="red", width=8)
-        draw.rectangle([(0 ,-2), (505, 505)], outline ="black", width=8)
+        draw.text((100, 457), 'Sim: ' + str(sim), fill=(0, 0, 0), font=font)
+        draw.rectangle([(30, 15), (470, 455)], outline="red", width=8)
+        draw.rectangle([(0, -2), (505, 505)], outline="black", width=8)
         self.qr_path = os.path.join(self.qrs_folder_path, (str(id) + ".png"))
-        frame.save(self.qr_path, dpi= (500,500))
+        frame.save(self.qr_path, dpi=(500, 500))
 
     def printQRCode(self):
         os.startfile(self.qr_path, 'print')
@@ -60,20 +61,22 @@ class qrGen:
             key2 = args[1]
         except IndexError:
             pass
-        d = self.qrs_folder_path   
+        d = self.qrs_folder_path
         qrs_path = list()
         while True:
             i = 0
             for path in sorted(os.listdir(d), key=len):
                 try:
                     if key2 is None:
-                        if (int(path[4:4+len(str(key1))]) == int(key1)):
-                            qrs_path.append(os.path.join(self.qrs_folder_path,path))
+                        if (int(path[4:4 + len(str(key1))]) == int(key1)):
+                            qrs_path.append(os.path.join(
+                                self.qrs_folder_path, path))
                             i += 1
                     else:
-                        if (int(path[4:4+len(str(key1))]) >= int(key1)) & (int(path[4:4+len(str(key2))]) <= int(key2)):
-                                qrs_path.append(os.path.join(self.qrs_folder_path,path))
-                                i += 1
+                        if (int(path[4:4 + len(str(key1))]) >= int(key1)) & (int(path[4:4 + len(str(key2))]) <= int(key2)):
+                            qrs_path.append(os.path.join(
+                                self.qrs_folder_path, path))
+                            i += 1
                 except ValueError:
                     print("")
                     pass
@@ -82,35 +85,38 @@ class qrGen:
         for i in qrs_path:
             img = Image.open(i)
             imgs.append(img)
-        pages = (len(imgs)-1)//24+1
+        pages = (len(imgs) - 1) // 24 + 1
         i = 0
-        if len(qrs_path)!= 0:
+        if len(qrs_path) != 0:
             initial = (qrs_path[i][-16:-4])
             for n in range(pages):
-                gridImg = Image.new('RGB', (2000, 3000), 'white')   
+                gridImg = Image.new('RGB', (2000, 3000), 'white')
                 currX = 500
                 currY = 500
                 for row in range(6):
                     for col in range(4):
                         try:
-                            gridImg.paste(imgs[i], (col*currX, row*currY))
+                            gridImg.paste(imgs[i], (col * currX, row * currY))
                             i += 1
-                            if isinstance((i/24), int):
+                            if isinstance((i / 24), int):
                                 break
                         except IndexError:
                             break
                 path = os.path.join(os.getcwd(), "Print Ready QRs")
-                final = (qrs_path[i-1][-16:-4])
-                print("From ID:{} to ID:{} to be printed as {}.png".format(initial, final, initial+'-'+final))
-                gridImg.save(path+'//'+initial+'_'+final+'.png', dpi= (500, 500))
-                initial = str(int((qrs_path[i-1][-16:-4]))+1)
+                final = (qrs_path[i - 1][-16:-4])
+                print("From ID:{} to ID:{} to be printed as {}.png".format(
+                    initial, final, initial + '-' + final))
+                gridImg.save(path + '//' + initial + '_' +
+                             final + '.png', dpi=(500, 500))
+                initial = str(int((qrs_path[i - 1][-16:-4])) + 1)
         else:
             print("QR codes from ID {} not found".format(key1))
             print("couldn't complete print protocol")
 
+
 if __name__ == "__main__":
     a = qrGen()
-    # for i in range(1103202105070001, 1103202105070100):   
+    # for i in range(1103202105070001, 1103202105070100):
     #     i = str(i)
     #     a.genQR(i, i[5:])
     a.printImagesInGrid(2021)

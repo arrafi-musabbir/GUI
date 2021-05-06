@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import config as cg
 from datetime import datetime
 
+
 class grapics:
 
     def __init__(self, cw, cwd, sc):
@@ -224,7 +225,8 @@ class grapics:
         font.setBold(True)
         font.setWeight(60)
         try:
-            text = "Today: {}".format(datetime.today().strftime("%d-%B-%Y"))+"\n\nNumber of devices initiated in current session: " + str(curr[0]) + "\n\nTotal Number of devices initiated today: " + str(curr[1]) + "\n\nTotal Number of devices initiated till today: " + str(curr[2])
+            text = "Today: {}".format(datetime.today().strftime("%d-%B-%Y")) + "\n\nNumber of devices initiated in current session: " + str(
+                curr[0]) + "\n\nTotal Number of devices initiated today: " + str(curr[1]) + "\n\nTotal Number of devices initiated till today: " + str(curr[2])
             self.currNumber.setText(text)
             self.currNumber.setFont(font)
             self.currNumber.setStyleSheet("color:rgb(255, 255, 255)")

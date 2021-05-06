@@ -2,7 +2,7 @@ if __name__ == "__main__":
     from PyQt5 import QtWidgets
     import gui
     import sys
-    
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = gui.Ui_MainWindow()
@@ -12,4 +12,3 @@ if __name__ == "__main__":
         ui.setupUi(MainWindow)
     MainWindow.showFullScreen()
     ui.action_Exit(app.exec_())
-    

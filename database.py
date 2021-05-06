@@ -11,6 +11,7 @@ import os
 from PasswordManager import PasswordManager
 import csv
 
+
 class database:
 
     def __init__(self, *args):
@@ -18,28 +19,30 @@ class database:
             os.makedirs('CSVs')
         except FileExistsError:
             pass
-        self.csv_path = os.path.join(os.getcwd(),'CSVs')
+        self.csv_path = os.path.join(os.getcwd(), 'CSVs')
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
         self.internetConnectivity = self.checkInternetSocket()
         try:
-            self.serverINFO = PasswordManager(args[0]).retrieveServerCredentials(args[1])
+            self.serverINFO = PasswordManager(
+                args[0]).retrieveServerCredentials(args[1])
             self.server = args[1]
         except IndexError:
             self.server = 'remote'
-            self.serverINFO = PasswordManager(args[0]).retrieveServerCredentials()
+            self.serverINFO = PasswordManager(
+                args[0]).retrieveServerCredentials()
         self.connectDB()
-        
-        
+
     # establish connection to database
+
     def connectDB(self):
-        if self.server == 'remote' :
+        if self.server == 'remote':
             try:
-                self.tunnel = SSHTunnelForwarder((self.serverINFO['SSH_HOST'], int(self.serverINFO['SSH_PORT'])), 
-                                            ssh_password=self.serverINFO['SSH_PSWD'], 
-                                            ssh_username=self.serverINFO['SSH_USER'], 
-                                            remote_bind_address=(self.serverINFO['DB_HOST'], int(self.serverINFO['DB_PORT']))) 
+                self.tunnel = SSHTunnelForwarder((self.serverINFO['SSH_HOST'], int(self.serverINFO['SSH_PORT'])),
+                                                 ssh_password=self.serverINFO['SSH_PSWD'],
+                                                 ssh_username=self.serverINFO['SSH_USER'],
+                                                 remote_bind_address=(self.serverINFO['DB_HOST'], int(self.serverINFO['DB_PORT'])))
                 self.tunnel.start()
                 self.myDB = mysql.connector.connect(
                     host=self.serverINFO['DB_HOST'],
@@ -59,11 +62,11 @@ class database:
         elif self.server == 'local':
             try:
                 self.myDB = mysql.connector.connect(
-                        host=self.serverINFO['local_DB_HOST'],
-                        port=3306,
-                        user=self.serverINFO['local_DB_UNAME'],
-                        password=self.serverINFO['local_DB_PSWD'],
-                        database=self.serverINFO['local_DB_NAME'])
+                    host=self.serverINFO['local_DB_HOST'],
+                    port=3306,
+                    user=self.serverINFO['local_DB_UNAME'],
+                    password=self.serverINFO['local_DB_PSWD'],
+                    database=self.serverINFO['local_DB_NAME'])
                 self.table_name = self.serverINFO['local_DB_TABLE']
                 self.db_state = 1
                 self.mycursor = self.myDB.cursor()
@@ -72,13 +75,13 @@ class database:
                 self.db_state = 0
                 print("Local server connection failed")
             return self.db_state
-    
+
     # add new entries
-    
+
     def addNew(self, Sim, ID, Password, CreatedOn):
         try:
             self.mycursor.execute(
-                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), ("R"+str(Sim), "I"+str(ID), Password, CreatedOn))
+                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), ("R" + str(Sim), "I" + str(ID), Password, CreatedOn))
             self.myDB.commit()
             time.sleep(1)
             print("added to database successfully")
@@ -122,7 +125,8 @@ class database:
                         "SELECT ID FROM {} ORDER BY ID DESC LIMIT 1".format(self.table_name))
                     qr_file = self.mycursor.fetchone()[0][1:]
                     try:
-                        os.remove(os.path.join(os.getcwd(),'QRs//'+qr_file+'.png'))
+                        os.remove(os.path.join(
+                            os.getcwd(), 'QRs//' + qr_file + '.png'))
                     except FileNotFoundError:
                         print("QR for ID {} does not exists".format(qr_file))
                     self.mycursor.execute(
@@ -138,7 +142,7 @@ class database:
     # get total number of entries/ID
     def getTotalID(self):
         try:
-            self.mycursor.execute("SELECT * FROM {} ".format(self.table_name))            
+            self.mycursor.execute("SELECT * FROM {} ".format(self.table_name))
             return len(self.mycursor.fetchall())
         except:
             print("database connection failed")
@@ -146,15 +150,16 @@ class database:
 
     # get last registered ID of current date
     def getLastID(self):
-        self.mycursor.execute("SELECT ID FROM {} ORDER BY ID DESC LIMIT 1".format(self.table_name))
+        self.mycursor.execute(
+            "SELECT ID FROM {} ORDER BY ID DESC LIMIT 1".format(self.table_name))
         lastidYMD = self.mycursor.fetchall()[0][0]
         if lastidYMD[-12:-4] != datetime.today().strftime("%Y%m%d"):
             return 0
         else:
             return int(lastidYMD[-4:])
 
-    
     # check if a stable internet connection is available
+
     def checkInternetSocket(self, host="8.8.8.8", port=53, timeout=3):
         try:
             socket.setdefaulttimeout(timeout)
@@ -168,8 +173,9 @@ class database:
             return False
 
     def exportCSV(self):
-        self.mycursor.execute("SELECT * FROM {} ORDER BY CreatedOn DESC".format(self.table_name)) 
-        with open(os.path.join(self.csv_path,'exportedFromDB_{}.csv'.format(datetime.today().strftime('%d %b %Y'))), 'w', newline='') as file:
+        self.mycursor.execute(
+            "SELECT * FROM {} ORDER BY CreatedOn DESC".format(self.table_name))
+        with open(os.path.join(self.csv_path, 'exportedFromDB_{}.csv'.format(datetime.today().strftime('%d %b %Y'))), 'w', newline='') as file:
             wr = csv.writer(file, dialect='excel')
             for i in self.mycursor.fetchall():
                 wr.writerow(i)
@@ -178,18 +184,18 @@ class database:
     def importCSV(self):
         self.clearTable()
         try:
-            with open(os.path.join(self.csv_path,'exportedFromSheet_{}.csv'.format(datetime.today().strftime('%d %b %Y'))), 'r') as file:
-                csv_data = csv.reader(file, delimiter = ',')
+            with open(os.path.join(self.csv_path, 'exportedFromSheet_{}.csv'.format(datetime.today().strftime('%d %b %Y'))), 'r') as file:
+                csv_data = csv.reader(file, delimiter=',')
                 for i in csv_data:
                     self.mycursor.execute(
-                        "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), (i[0],i[1],i[2],i[3]))
+                        "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), (i[0], i[1], i[2], i[3]))
                     self.myDB.commit()
                 print("added to database successfully")
                 self.myDB.commit()
                 return True
-        except :
+        except:
             return False
-            
+
 
 if __name__ == "__main__":
     print("IN DATABASE")

@@ -31,11 +31,10 @@ class commDev:
                                 self.communication = 1
                                 return True
                 except UnicodeDecodeError:
-                    return False    
+                    return False
         except serial.serialutil.SerialException:
             print("Could not open port")
             return False
-            
 
     def auto_establish_comm(self):
         self.find_com_port()
@@ -52,7 +51,7 @@ class commDev:
             except serial.serialutil.SerialException:
                 self.close_device()
                 return False
-        else: 
+        else:
             self.connectedPort = None
             return False
 
@@ -67,7 +66,7 @@ class commDev:
                 self.listPorts.remove('/dev/ttyAMA0')
             except ValueError:
                 pass
-            print("Comm ports found:",self.listPorts)
+            print("Comm ports found:", self.listPorts)
             if len(self.listPorts) > 0:
                 self.commPort = self.listPorts[0]
                 return self.listPorts
@@ -82,7 +81,7 @@ class commDev:
     def flush_device(self):
         print("device flushed")
         self.sc.flush()
-        
+
     def close_device(self):
         try:
             self.sc.close()
@@ -90,6 +89,7 @@ class commDev:
         except AttributeError:
             print("Tried closing all connected serial devices")
             print("Serial port not connected properly/ serial port not responding")
+
 
 if __name__ == "__main__":
     a = commDev()

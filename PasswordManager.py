@@ -6,11 +6,13 @@ import base64
 import yaml
 import cryptography.fernet
 
+
 class PasswordManager:
-    
+
     def __init__(self, *args):
-        self.encryptiontype = cryptography.fernet.Fernet(self.generateKey(args[0], self.retrieveSalt()))
-        
+        self.encryptiontype = cryptography.fernet.Fernet(
+            self.generateKey(args[0], self.retrieveSalt()))
+
     def generateSalt(self):
         salt = os.urandom(32)
         path = '.salt'
@@ -19,69 +21,67 @@ class PasswordManager:
         with open(path, 'wb') as file:
             file.write(salt)
         return salt
-    
+
     def retrieveSalt(self):
         try:
-            with open(os.path.join(os.getcwd(),'.salt'), 'rb') as file:
+            with open(os.path.join(os.getcwd(), '.salt'), 'rb') as file:
                 return file.read()
         except FileNotFoundError:
             salt = b'\x02\x90/\xef\xc75\x807A\xe5d\xcf\x9c\xae\xbdL/\xbd+\x07\xbb\xc5\x81\xdb\xb4\xbbJ\xac*~\xc6\x0c'
             return salt
 
     def generateKey(self, passphrase, salt):
-        
+
         kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        iterations=10000,
-        backend=default_backend()
-    )
+            algorithm=hashes.SHA256(),
+            length=32,
+            salt=salt,
+            iterations=10000,
+            backend=default_backend()
+        )
         return base64.urlsafe_b64encode(kdf.derive(passphrase.encode()))
-    
+
     def retrieveServerCredentials(self, server='remote'):
         serverCreds = dict()
         try:
             if server == 'remote':
-                with open(os.path.join(os.getcwd(),'creds.yml'), 'r') as file:
+                with open(os.path.join(os.getcwd(), 'creds.yml'), 'r') as file:
                     yaml_data = yaml.safe_load(file)
                     for key in yaml_data:
-                        serverCreds[self.encryptiontype.decrypt(key).decode()] = self.encryptiontype.decrypt(yaml_data[key]).decode()
-                return serverCreds 
-            elif server == 'local': 
-                with open(os.path.join(os.getcwd(),'creds_local.yml'), 'r') as file:
+                        serverCreds[self.encryptiontype.decrypt(key).decode(
+                        )] = self.encryptiontype.decrypt(yaml_data[key]).decode()
+                return serverCreds
+            elif server == 'local':
+                with open(os.path.join(os.getcwd(), 'creds_local.yml'), 'r') as file:
                     yaml_data = yaml.safe_load(file)
                     for key in yaml_data:
                         serverCreds[key] = yaml_data[key]
-                return serverCreds 
+                return serverCreds
         except cryptography.fernet.InvalidToken:
             print("Wrong passphrase")
             return False
-    
+
     def encryptServerCredentials(self):
-        with open(os.path.join(os.getcwd(),'creds.yml'), 'rb') as file:
+        with open(os.path.join(os.getcwd(), 'creds.yml'), 'rb') as file:
             yaml_data = yaml.safe_load(file)
         print(yaml_data)
         serverCreds = dict()
-        with open(os.path.join(os.getcwd(),'creds.yml'), 'w') as file:
+        with open(os.path.join(os.getcwd(), 'creds.yml'), 'w') as file:
             for key in yaml_data:
-                serverCreds[self.encryptiontype.encrypt(key.encode())] = self.encryptiontype.encrypt(yaml_data[key].encode())
+                serverCreds[self.encryptiontype.encrypt(
+                    key.encode())] = self.encryptiontype.encrypt(yaml_data[key].encode())
             yaml.dump(serverCreds, file)
         print("Server credentials encrypted and stored successfully")
-    
+
+
 if __name__ == '__main__':
     # replace passphrase with your passphrase
     a = PasswordManager(passphrase)
     # a.encryptServerCredentials()
     print(a.retrieveServerCredentials())
 
-    # a.encryptServerCredentials()   
+    # a.encryptServerCredentials()
 
 
-
-    
-    
-    
-    
 # default salt used in here
 # salt = b'\x02\x90/\xef\xc75\x807A\xe5d\xcf\x9c\xae\xbdL/\xbd+\x07\xbb\xc5\x81\xdb\xb4\xbbJ\xac*~\xc6\x0c'
