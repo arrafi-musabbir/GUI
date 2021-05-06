@@ -105,7 +105,8 @@ class database:
     def disconnect(self):
         if self.db_state == 1:
             self.myDB.disconnect()
-            self.tunnel.close()
+            if self.server == 'remote':
+                self.tunnel.close()
             print("server disconnection protocol successful")
 
     # clear said table
@@ -199,13 +200,13 @@ class database:
 
 if __name__ == "__main__":
     print("IN DATABASE")
-    a = database('')
+    # a = database('')
     # a.connectDB()
     # # a.describeTable()
     # a.exportCSV()
     # a.importCSV()
     # # a.clearTable()
     # # print(a.getTotalID())
-    print(a.getLastID())
+    # print(a.getLastID())
     # a.clearEntries(1)
     # a.disconnect()
