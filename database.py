@@ -23,7 +23,7 @@ class database:
         self.db_state = 0
         self.mycursor = None
         self.totalIDs = None
-        self.internetConnectivity = self.checkInternetSocket()
+        # self.internetConnectivity = self.checkInternetSocket()
         try:
             self.serverINFO = PasswordManager(
                 args[0]).retrieveServerCredentials(args[1])
@@ -32,7 +32,7 @@ class database:
             self.server = 'remote'
             self.serverINFO = PasswordManager(
                 args[0]).retrieveServerCredentials()
-        self.connectDB()
+        # self.connectDB()
 
     # establish connection to database
 

@@ -89,7 +89,7 @@ class qrGen:
         i = 0
         if len(qrs_path) != 0:
             initial = (qrs_path[i][-16:-4])
-            for n in range(pages):
+            for _ in range(pages):
                 gridImg = Image.new('RGB', (2000, 3000), 'white')
                 currX = 500
                 currY = 500
