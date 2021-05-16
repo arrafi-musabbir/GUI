@@ -13,15 +13,21 @@ from QR_Generator import qrGen
 from spreadSheet import spreadSheet
 import webbrowser
 import pyautogui
+import yaml
 
 
 class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow, *args):
-
+        with open('config.yml', 'r') as file:
+            self.config = yaml.safe_load(file)
+            print(self.config['window_x'])
+            
+            
         MainWindow.setObjectName("MainWindow")
-        width, height = pyautogui.size()
-        MainWindow.setGeometry(0, 0, width, height)
+        # width, height = pyautogui.size()
+        width, height = 1366, 768
+        MainWindow.setGeometry(100, 100, width, height)
         MainWindow.setEnabled(True)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -575,5 +581,5 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
 
-    MainWindow.showFullScreen()
+    MainWindow.show()
     ui.action_Exit(app.exec_())

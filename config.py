@@ -1,13 +1,4 @@
-# import pyautogui
-# width, height = pyautogui.size()
-# import os
-# cwd = os.getcwd()
 
-width = 1366
-height = 768
-
-# window_x = (1920 - width) // 2
-# window_y = (1080 - height) // 2
 window_x, window_y = 0, 0
 
 

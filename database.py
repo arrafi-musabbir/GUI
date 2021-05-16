@@ -81,7 +81,8 @@ class database:
     def addNew(self, Sim, ID, Password, CreatedOn):
         try:
             self.mycursor.execute(
-                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name), ("R" + str(Sim), "I" + str(ID), Password, CreatedOn))
+                "INSERT INTO {}(Sim, ID, Password, CreatedOn) VALUES(%s, %s, %s, %s)".format(self.table_name),
+                    ("R" + str(Sim), "I" + str(ID), Password, CreatedOn))
             self.myDB.commit()
             time.sleep(1)
             print("added to database successfully")
@@ -160,7 +161,6 @@ class database:
             return int(lastidYMD[-4:])
 
     # check if a stable internet connection is available
-
     def checkInternetSocket(self, host="8.8.8.8", port=53, timeout=3):
         try:
             socket.setdefaulttimeout(timeout)
@@ -169,7 +169,6 @@ class database:
             print("stable internet connection")
             return True
         except socket.error:
-            # print(ex)
             print("unstable internet connection restored")
             return False
 
